@@ -76,10 +76,11 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --accent-brand: oklch(0.61 0.16 265);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
+  --background: oklch(0.088 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -110,13 +111,28 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --accent-brand: oklch(0.61 0.16 265);
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-[oklch(var(--accent-brand)/0.5)];
   }
   body {
     @apply bg-background text-foreground;
+    background-image: radial-gradient(ellipse at center, oklch(1 1 1 / 0.02) 0%, transparent 70%), var(--bg-image, none);
+      background-color: oklch(var(--background));
   }
+h1 {
+  @apply font-serif italic;
+}
+
+*:focus-visible {
+  @apply outline-2 outline-offset-2 outline-[oklch(var(--accent-brand))];
+}
+}
+
+/* Custom Slider Track Style */
+.mood-slider>[data-slot='track'] {
+  @apply bg-gradient-to-r from-lime-500 via-amber-500 to-rose-500;
 }

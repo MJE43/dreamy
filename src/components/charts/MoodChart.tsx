@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import {
+  Area,
   CartesianGrid,
   Line,
   LineChart,
@@ -9,6 +10,7 @@ import {
   YAxis,
   // Tooltip // Removed unused recharts import
 } from "recharts"
+import colors from 'tailwindcss/colors' // Added for color
 
 import {
   Card, CardContent, CardDescription, CardHeader, CardTitle
@@ -28,21 +30,20 @@ interface MoodChartProps {
 
 const chartConfig = {
   mood: {
-    label: "Mood", // Simpler label for tooltip
-    color: "hsl(var(--chart-1))", // Use CSS variable for theme consistency
+    label: "Mood Score", // Updated label for clarity
+    color: colors.amber[500], // Using Amber 500 as representative color
   },
 } satisfies ChartConfig
 
 export default function MoodChart({ data }: MoodChartProps) {
-  if (!data || data.length === 0) {
+  if (!data || data.length < 3) {
     return (
-      <Card className="min-h-[200px] flex flex-col">
+      <Card className="min-h-[240px] flex flex-col">
         <CardHeader>
-          <CardTitle className="text-xl">Mood Over Time</CardTitle>
-          <CardDescription>Recent mood entries will appear here.</CardDescription>
+          <CardTitle className="text-xl">Mood Trend</CardTitle>
         </CardHeader>
         <CardContent className="flex-grow flex items-center justify-center">
-          <p className="text-muted-foreground">Not enough data to display chart.</p>
+          <p className="text-muted-foreground text-center px-4">Log at least 3 dreams to see your mood trends.</p>
         </CardContent>
       </Card>
     );
@@ -51,64 +52,55 @@ export default function MoodChart({ data }: MoodChartProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-xl">Mood Over Time</CardTitle>
+        <CardTitle className="text-xl">Mood Trend</CardTitle>
         <CardDescription>
-          Mood recorded from recent dreams (1=Negative, 5=Positive)
+          Recent mood trend (1=Negative, 5=Positive)
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {/* Important: Set min height for responsiveness */}
         <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
           <LineChart
-            accessibilityLayer // Enhances accessibility
+            accessibilityLayer
             data={data}
-            margin={{
-              top: 5,
-              right: 10, // Add some right margin for labels
-              left: -20, // Adjust left margin to bring axis closer
-              bottom: 5, // Add bottom margin
-            }}
+            margin={{ top: 5, right: 10, left: -20, bottom: 5 }}
           >
-            {/* Subtler grid lines */}
-            <CartesianGrid vertical={false} strokeDasharray="3 3" className="stroke-muted/50" />
+            {/* Grid hidden by default - will add toggle later */}
+            {/* <CartesianGrid vertical={false} strokeDasharray="3 3" className="stroke-muted/50" /> */}
             <XAxis
               dataKey="date"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
               tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
-              // Optionally show fewer ticks if too crowded
-              // interval={data.length > 10 ? Math.floor(data.length / 5) : 0} 
             />
-            <YAxis
-              domain={[0.5, 5.5]} // Add padding to domain
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              ticks={[1, 2, 3, 4, 5]} // Ensure ticks are integers 1-5
-              tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
-            />
+            {/* Hide YAxis for sparkline effect */}
+            <YAxis hide domain={[0.5, 5.5]} /> 
             <ChartTooltip
-                cursor={{ strokeDasharray: '3 3', stroke: 'hsl(var(--muted-foreground))' }} // Add subtle cursor line
+                cursor={{ strokeDasharray: '3 3' }} // Use default cursor color
                 content={
                   <ChartTooltipContent 
-                    // Removed hideLabel, let it show the date by default
                     className="bg-popover text-popover-foreground shadow-md rounded-md px-3 py-2 text-sm" 
-                    nameKey="mood" // Use mood value for display
+                    nameKey="mood" // This will show the score
                     labelFormatter={(value) => `Date: ${value}`} // Format the label (date)
+                    formatter={(value, name, props) => [`Score: ${value}`, null]} // Format the value display
                   />
-                } // Use themed tooltip
+                } 
             />
-            {/* Optional Legend if needed later */}
-            {/* <ChartLegend content={<ChartLegendContent />} /> */}
+            {/* Added Area component */}
+            <Area
+              dataKey="mood"
+              type="monotone"
+              fill={chartConfig.mood.color} 
+              fillOpacity={0.3}
+              stroke="none"
+            />
             <Line
               dataKey="mood"
-              type="monotone" // Makes the line curved
-              stroke="var(--color-mood)" // Use color from chartConfig
+              type="monotone" 
+              stroke={chartConfig.mood.color} // Use color from chartConfig
               strokeWidth={2}
-              dot={false} // Keep dots hidden by default
-              // Add activeDot prop for hover/focus interaction
-              activeDot={{ r: 6, fill: "hsl(var(--background))", stroke: "var(--color-mood)", strokeWidth: 2 }}
+              dot={false}
+              activeDot={{ r: 6, fill: "hsl(var(--background))", stroke: chartConfig.mood.color, strokeWidth: 2 }}
             />
           </LineChart>
         </ChartContainer>
