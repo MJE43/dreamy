@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { PrismaClient, Dream } from '@/generated/prisma'
 import * as z from 'zod'
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "../auth/[...nextauth]/route" // Import authOptions
 
 const prisma = new PrismaClient()
 
@@ -11,7 +13,7 @@ if (!process.env.GOOGLE_API_KEY) {
   console.warn("GOOGLE_API_KEY not set. Analysis feature will be disabled.");
 }
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "");
-const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash"});
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest"});
 
 // Schema for validating incoming request body
 const ingestSchema = z.object({
@@ -19,24 +21,6 @@ const ingestSchema = z.object({
   mood: z.number().min(1).max(5),
   tags: z.string().optional(), // Expecting comma-separated string, make optional
 })
-
-// Helper function to find or create a dummy user
-async function getDummyUserId(): Promise<string> {
-  const dummyEmail = 'test@example.com'
-  let user = await prisma.user.findUnique({
-    where: { email: dummyEmail },
-  })
-
-  if (!user) {
-    console.log(`Creating dummy user: ${dummyEmail}`)
-    user = await prisma.user.create({
-      data: {
-        email: dummyEmail,
-      },
-    })
-  }
-  return user.id
-}
 
 // Function to build the prompt for Gemini
 // Using Prisma's generated Dream type for better type safety
@@ -81,13 +65,20 @@ Format the analysis clearly. Address key symbols, settings, characters, and the 
     return prompt;
 }
 
-
 export async function POST(request: Request) {
-  // Check for API key existence early
+  // Get session data
+  const session = await getServerSession(authOptions)
+
+  // Check if user is authenticated
+  if (!session || !session.user || !session.user.id) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  const userId = session.user.id; // Use the actual user ID from session
+
+  // Check for Gemini API key (can stay here or be moved)
   if (!process.env.GOOGLE_API_KEY) {
-      console.error("GOOGLE_API_KEY not set");
-      // Return error but perhaps allow dream saving without analysis?
-      // For now, blocking the request entirely if key is missing.
+      console.error("GOOGLE_API_KEY not set for user:", userId);
+      // Decide if dream can be saved without analysis if key is missing
       return NextResponse.json({ error: "Server configuration error: Missing API Key for analysis." }, { status: 500 });
   }
 
@@ -101,29 +92,26 @@ export async function POST(request: Request) {
 
     const { description, mood, tags } = validation.data
 
-    // Get dummy user ID (replace with actual auth later)
-    const userId = await getDummyUserId()
-
-    // 1. Insert the new dream
+    // 1. Insert the new dream (using actual userId)
     const newDream = await prisma.dream.create({
       data: {
         description,
         mood,
-        tags: tags || "", // Ensure tags is always a string
-        userId,
+        tags: tags || "",
+        userId: userId, // Use the authenticated user's ID
       },
     })
 
-    // 2. Fetch recent dreams for context (including the one just added)
+    // 2. Fetch recent dreams for context (for the specific user)
     const recentDreams = await prisma.dream.findMany({
-        where: { userId },
+        where: { userId: userId }, // Ensure we only fetch dreams for this user
         orderBy: { createdAt: 'desc' },
-        take: 5, // Fetch last 5 including new one
+        take: 5,
     });
 
     // 3. Build the prompt
     const prompt = buildPrompt(recentDreams, newDream);
-    console.log("\n--- Gemini Prompt ---\n", prompt, "\n---------------------\n");
+    console.log(`\n--- Gemini Prompt for user ${userId} ---\n`, prompt, "\n---------------------\n");
 
     // 4. Call Gemini
     let analysisContent: string | null = null;
@@ -133,14 +121,12 @@ export async function POST(request: Request) {
         analysisContent = response.text();
 
         if (!analysisContent) {
-            console.warn("Gemini did not return text content.", response);
+            console.warn("Gemini did not return text content for user:", userId, response);
         } else {
-             console.log("\n--- Gemini Analysis ---\n", analysisContent, "\n----------------------\n");
+             console.log(`\n--- Gemini Analysis for user ${userId} ---\n`, analysisContent, "\n----------------------\n");
         }
     } catch (geminiError) {
-        console.error("Error calling Gemini API:", geminiError);
-        // Decide how to handle Gemini errors - perhaps log and continue without analysis?
-        // For now, we log the error but allow the request to succeed without analysis.
+        console.error(`Error calling Gemini API for user ${userId}:`, geminiError);
     }
 
     // 5. Persist analysis if available
@@ -153,12 +139,11 @@ export async function POST(request: Request) {
         });
     }
 
-    // Return success, maybe include the dream ID or a confirmation
+    // Return success
     return NextResponse.json({ ok: true, dreamId: newDream.id, analysisGenerated: !!analysisContent }, { status: 201 })
 
   } catch (error) {
-    console.error('Error in /api/ingest:', error)
-    // Differentiate between Prisma errors and other errors if needed
+    console.error(`Error in /api/ingest for user ${userId}:`, error)
     if (error instanceof Error) {
         return NextResponse.json({ error: 'Could not process dream', details: error.message }, { status: 500 })
     }

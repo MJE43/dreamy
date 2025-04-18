@@ -15,11 +15,59 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  dreams        Dream[]
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  email     String   @unique // Assuming email is the primary identifier for now
-  dreams    Dream[]
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([identifier, token])
 }
 
 model Dream {
@@ -30,7 +78,7 @@ model Dream {
   mood        Int // Add mood (e.g., 1-5)
   tags        String // Store tags as a delimited string
   userId      String
-  user        User      @relation(fields: [userId], references: [id])
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   analysis    Analysis? // A dream can have zero or one analysis
 }
 
@@ -40,5 +88,5 @@ model Analysis {
   updatedAt DateTime @updatedAt
   content   String // The actual analysis content from the LLM
   dreamId   String   @unique // Each analysis belongs to exactly one dream
-  dream     Dream    @relation(fields: [dreamId], references: [id])
+  dream     Dream    @relation(fields: [dreamId], references: [id], onDelete: Cascade)
 }
