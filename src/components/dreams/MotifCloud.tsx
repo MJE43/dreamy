@@ -1,4 +1,5 @@
 import React from 'react';
+import { TagCloud, ColorOptions } from 'react-tagcloud';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface Motif {
@@ -6,31 +7,47 @@ interface Motif {
   count: number;
 }
 
-interface MotifCloudProps {
-  motifs: Motif[];
-  onMotifClick?: (motif: string) => void; // Optional callback for filtering
+// Type for the data structure react-tagcloud uses internally and passes to renderer/onClick
+interface TagCloudTag {
+  value: string;
+  count: number;
 }
 
-// TODO: Implement SVG cloud generation (e.g., using d3-cloud or similar)
-const generateCloudLayout = (motifs: Motif[]): { text: string; size: number; x: number; y: number }[] => {
-  // Placeholder: Just return motifs with size based on count for now
-  const maxSize = 36;
-  const minSize = 12;
-  const maxCount = Math.max(...motifs.map(m => m.count), 1);
-  return motifs.map((motif, index) => ({
-    text: motif.tag,
-    size: minSize + (maxSize - minSize) * (motif.count / maxCount),
-    // Simple placeholder positioning - replace with actual cloud layout logic
-    x: (index % 5) * 60, 
-    y: Math.floor(index / 5) * 40,
-  }));
-};
+interface MotifCloudProps {
+  motifs: Motif[];
+  onMotifClick?: (tagValue: string) => void; // Pass the tag value (string)
+}
+
+// Custom renderer for tags to handle clicks
+// Explicitly type the tag and props parameters
+const customTagRenderer = (tag: TagCloudTag, size: number, color: string, props?: React.HTMLAttributes<HTMLSpanElement> & { key?: React.Key }) => {
+  const { key, onClick, ...otherProps } = props || {}; // Extract key and onClick
+  return (
+    <span 
+      key={key} 
+      style={{ 
+        fontSize: `${size}px`, 
+        color: color, 
+        margin: '3px', 
+        padding: '3px', 
+        display: 'inline-block',
+        cursor: onClick ? 'pointer' : 'default', // Show pointer if clickable
+        verticalAlign: 'middle',
+      }}
+      onClick={onClick} // Attach the onClick handler passed by TagCloud
+      className="hover:opacity-75 transition-opacity" // Added hover effect
+      {...otherProps} // Spread remaining props
+    >
+      {tag.value}
+    </span>
+  );
+}
 
 export default function MotifCloud({ motifs, onMotifClick }: MotifCloudProps) {
   if (!motifs || motifs.length === 0) {
     return (
       <Card>
-        <CardHeader><CardTitle className="text-xl">Top Motifs</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-xl">Motif Cloud</CardTitle></CardHeader>
         <CardContent>
           <p className="text-muted-foreground text-sm">No motifs found yet. Add tags to your dreams!</p>
         </CardContent>
@@ -38,33 +55,30 @@ export default function MotifCloud({ motifs, onMotifClick }: MotifCloudProps) {
     );
   }
 
-  const layout = generateCloudLayout(motifs);
-  const viewBoxWidth = 300; // Adjust as needed
-  const viewBoxHeight = Math.max(...layout.map(l => l.y + l.size), 100); // Dynamic height based on layout
+  // Map data to the format expected by react-tagcloud
+  const data: TagCloudTag[] = motifs.map(motif => ({ value: motif.tag, count: motif.count }));
+
+  // Explicitly type the options object
+  const options: ColorOptions = {
+    luminosity: 'dark', // Use 'dark' for light text on dark background
+    hue: 'blue',       // Base hue for tag colors (can be specific hex/rgb too)
+  };
 
   return (
     <Card>
       <CardHeader><CardTitle className="text-xl">Motif Cloud</CardTitle></CardHeader>
       <CardContent>
-        <div className="w-full aspect-video max-h-[250px] overflow-hidden flex items-center justify-center">
-           {/* Placeholder SVG - Replace with proper cloud layout */}
-           <svg viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`} className="w-full h-full">
-              <g transform={`translate(${viewBoxWidth / 2}, ${viewBoxHeight / 2})`}> {/* Center the group */} 
-                {layout.map((word) => (
-                  <text
-                    key={word.text}
-                    textAnchor="middle"
-                    transform={`translate(${word.x - viewBoxWidth / 2}, ${word.y - viewBoxHeight / 2})`}
-                    fontSize={word.size}
-                    fill="currentColor"
-                    className="cursor-pointer hover:opacity-75 transition-opacity"
-                    onClick={() => onMotifClick?.(word.text)}
-                  >
-                    {word.text}
-                  </text>
-                ))}
-              </g>
-           </svg>
+        {/* Use a div container to constrain the cloud size */}
+        <div className="w-full aspect-video max-h-[250px] overflow-hidden flex items-center justify-center p-4">
+          <TagCloud
+            minSize={12}
+            maxSize={35}
+            tags={data}
+            colorOptions={options} // Pass the typed options object
+            onClick={(tag: TagCloudTag) => onMotifClick?.(tag.value)} // Call onMotifClick with the tag value
+            renderer={customTagRenderer} // Use the custom renderer
+            className="text-center" // Optional: center align text if needed
+          />
         </div>
       </CardContent>
     </Card>
