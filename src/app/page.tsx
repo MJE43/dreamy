@@ -1,10 +1,10 @@
 import { getServerSession } from "next-auth/next";
-import type { Session } from "next-auth"; // Keep Session type import here
-import { authOptions } from "./api/auth/[...nextauth]/route";
+// import { authOptions } from "./api/auth/[...nextauth]/route"; // Old path
+import { authOptions } from "@/lib/authOptions"; // New path
 import { redirect } from 'next/navigation';
 import { PrismaClient } from "@/generated/prisma";
 import DashboardClient from "./DashboardClient";
-import { RecentDream, MoodData, MotifData } from "@/types"; // Import shared types
+import { MoodData, MotifData } from "@/types"; // Import shared types
 
 // Type definitions are now imported from @/types
 
@@ -70,11 +70,18 @@ export default async function Home() {
 
   // Render the Client Component with fetched data
   return (
-    <DashboardClient
-      initialDreams={recentDreams}
-      initialMoodData={moodData}
-      initialTopMotifs={topMotifs}
-      session={session} // Keep passing session
-    />
+    <div className="p-4 md:p-8">
+      <div className="mb-6">
+        <h1 className="text-4xl font-bold tracking-tight mb-2">log a dream, unveil the subtext.</h1>
+        <p className="text-muted-foreground max-w-2xl">
+          {`Welcome back, ${session.user.name || session.user.email}.`}
+        </p>
+      </div>
+      <DashboardClient
+        initialDreams={recentDreams}
+        initialMoodData={moodData}
+        initialTopMotifs={topMotifs}
+      />
+    </div>
   );
 }

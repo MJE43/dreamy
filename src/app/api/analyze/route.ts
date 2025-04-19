@@ -3,7 +3,7 @@ import { PrismaClient, Dream } from '@/generated/prisma';
 import * as z from 'zod';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "@/lib/authOptions";
 
 const prisma = new PrismaClient();
 

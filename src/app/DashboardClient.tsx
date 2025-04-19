@@ -35,18 +35,21 @@ interface DashboardClientProps {
   initialDreams: RecentDream[];
   initialMoodData: MoodData[];
   initialTopMotifs: MotifData[];
-  session: Session; // Session should not be null here due to server redirect
+  // session: Session; // Session prop is no longer needed here
 }
 
 export default function DashboardClient({
   initialDreams,
   initialMoodData,
   initialTopMotifs,
-  session
+  // session // Remove session from destructuring
 }: DashboardClientProps) {
   // State initialized with props from the Server Component
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [dreams, setDreams] = useState<RecentDream[]>(initialDreams);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [moodData, setMoodData] = useState<MoodData[]>(initialMoodData);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [topMotifs, setTopMotifs] = useState<MotifData[]>(initialTopMotifs);
   const [filterMotif, setFilterMotif] = useState<string | null>(null);
 
@@ -66,16 +69,10 @@ export default function DashboardClient({
   // No need for loading state or session check here, handled by server component
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[minmax(auto,_24rem)_1fr_20rem] gap-6 p-4 md:p-8 min-h-screen">
+    <div className="grid grid-cols-1 lg:grid-cols-[minmax(auto,_24rem)_1fr_20rem] gap-6">
 
       {/* --- Column 1: Input & Title --- */}
       <div className="lg:col-span-1 space-y-6">
-         <div>
-           <h1 className="text-4xl font-bold tracking-tight mb-2">log a dream, unveil the subtext.</h1>
-           <p className="text-muted-foreground max-w-2xl">
-              {`Welcome back, ${session.user.name || session.user.email}.`}
-           </p>
-         </div>
         <Card>
           <CardHeader><CardTitle className="text-xl">New Dream</CardTitle></CardHeader>
           <CardContent><DreamInputForm /></CardContent> {/* Needs logic to update state */}

@@ -7,14 +7,15 @@ import remarkGfm from 'remark-gfm';
 
 const prisma = new PrismaClient();
 
-interface DreamPageProps {
-  params: {
-    id: string; // Dream ID from the URL
-  };
+// Rename interface to avoid potential global conflicts
+interface DreamIdPageProps {
+  params: { id: string };
+  searchParams?: Record<string, string | string[] | undefined>;
 }
 
 // This is a Server Component by default in the App Router
-export default async function DreamPage({ params }: DreamPageProps) {
+// Use the renamed interface
+export default async function DreamPage({ params }: DreamIdPageProps) {
   const { id } = params;
 
   if (!id) {
@@ -99,7 +100,8 @@ export default async function DreamPage({ params }: DreamPageProps) {
 }
 
 // Optional: Improve metadata for the page
-export async function generateMetadata({ params }: DreamPageProps) {
+// Use the renamed interface here as well
+export async function generateMetadata({ params }: DreamIdPageProps) {
   const { id } = params;
   const dream = await prisma.dream.findUnique({ where: { id } });
 
