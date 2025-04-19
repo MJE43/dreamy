@@ -7,16 +7,20 @@ import remarkGfm from 'remark-gfm';
 
 const prisma = new PrismaClient();
 
+// Define the expected Promise type for params in Next 15+
+// Note: Using 'any' for the resolved value based on the error message, adjust if needed
+type ParamsPromise = Promise<{ id: string }>;
+
 // Rename interface to avoid potential global conflicts
 interface DreamIdPageProps {
-  params: { id: string };
-  searchParams?: Record<string, string | string[] | undefined>;
+  params: ParamsPromise;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }
 
 // This is a Server Component by default in the App Router
-// Use the renamed interface
 export default async function DreamPage({ params }: DreamIdPageProps) {
-  const { id } = params;
+  const resolvedParams = await params;
+  const { id } = resolvedParams;
 
   if (!id) {
     notFound();
@@ -43,30 +47,30 @@ export default async function DreamPage({ params }: DreamIdPageProps) {
       <Card className="w-full max-w-3xl mx-auto overflow-hidden">
         <CardHeader>
           <CardTitle className="text-2xl">Dream Details</CardTitle>
-          <CardDescription>Recorded on: {new Date(dream.createdAt).toLocaleDateString()}</CardDescription>
+          <CardDescription>Recorded on: {new Date(dream!.createdAt).toLocaleDateString()}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-2">
             <h3 className="font-semibold text-lg">Description:</h3>
             <div className="p-3 border rounded-md max-h-[250px] overflow-y-auto bg-muted/30">
-              <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{dream.description}</p>
+              <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{dream!.description}</p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1">
               <h3 className="font-semibold">Mood:</h3>
-              <p>{dream.mood} / 5</p>
+              <p>{dream!.mood} / 5</p>
             </div>
             <div className="space-y-1">
               <h3 className="font-semibold mb-1">Tags:</h3>
               <div className="flex flex-wrap">
-                {renderTags(dream.tags)}
+                {renderTags(dream!.tags)}
               </div>
             </div>
           </div>
 
-          {dream.analysis && (
+          {dream!.analysis && (
             <div className="border-t pt-6 space-y-3">
               <h3 className="text-xl font-semibold">Analysis:</h3>
               <div className="p-3 border rounded-md max-h-[400px] overflow-y-auto bg-muted/30">
@@ -82,13 +86,13 @@ export default async function DreamPage({ params }: DreamIdPageProps) {
                     a: ({ ...props }) => <a className="text-blue-600 hover:underline dark:text-blue-400" {...props} />,
                   }}
                 >
-                  {dream.analysis.content}
+                  {dream!.analysis.content}
                 </ReactMarkdown>
               </div>
             </div>
           )}
 
-          {!dream.analysis && (
+          {!dream!.analysis && (
              <div className="border-t pt-6">
               <p className="text-muted-foreground">Analysis is not yet available for this dream.</p>
             </div>
@@ -100,9 +104,10 @@ export default async function DreamPage({ params }: DreamIdPageProps) {
 }
 
 // Optional: Improve metadata for the page
-// Use the renamed interface here as well
-export async function generateMetadata({ params }: DreamIdPageProps) {
-  const { id } = params;
+// Keep generateMetadata as is for now, its props might be handled differently
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = await params;
+  const { id } = resolvedParams;
   const dream = await prisma.dream.findUnique({ where: { id } });
 
   return {

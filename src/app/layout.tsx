@@ -3,7 +3,7 @@ import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import AuthProvider from "@/components/auth/AuthProvider";
-import Header from "@/components/layout/Header";
+// import Header from "@/components/layout/Header"; // Removed unused import
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { LiveRegionProvider } from "@/context/LiveRegionContext";
 
@@ -48,7 +48,7 @@ export default function RootLayout({
           <AuthProvider>
             <LiveRegionProvider>
               <div className="flex flex-col min-h-screen">
-                <Header />
+                {/* <Header /> */}
                 <main className="flex-grow">
                   {children}
                 </main>

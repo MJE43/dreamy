@@ -174,9 +174,10 @@ export default function DreamInputForm() {
     }
     // Default Step 1 view
     return (
-      <div className="flex items-center justify-center space-x-2 mb-4 text-sm text-muted-foreground">
-        <span className="font-semibold text-foreground">1 Write Dream</span>
-        <span>→</span>
+      <div className="flex items-center justify-end space-x-1 mb-4 text-xs text-muted-foreground">
+        <span className="font-medium text-purple-600 dark:text-purple-400">1</span>
+        <span>Write Dream</span>
+        <span className="mx-1">→</span>
         <span>2 View Analysis</span>
       </div>
     );
@@ -189,19 +190,19 @@ export default function DreamInputForm() {
 
         {step === (1 as 1 | 2) && (
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleAnalyzeDream)} className="space-y-6 relative">
+            <form onSubmit={form.handleSubmit(handleAnalyzeDream)} className="space-y-4 relative">
               <FormField
                 control={form.control}
                 name="description"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Dream Description</FormLabel>
+                  <FormItem className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">Dream Description</span>
+                    </div>
                     <FormControl>
                       <TextareaAutosize
-                        placeholder="Describe your dream..."
-                        className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
-                        minRows={4}
-                        maxRows={15}
+                        placeholder="Describe your dream in detail..."
+                        className="flex min-h-[150px] w-full resize-none rounded-md border bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 border-purple-100 focus:border-purple-300 dark:border-slate-700 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                         {...field}
                       />
                     </FormControl>
@@ -216,24 +217,24 @@ export default function DreamInputForm() {
                 control={form.control}
                 name="mood"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="space-y-2">
                     <FormLabel>Mood</FormLabel>
                     <FormControl>
-                      <div className="flex items-center space-x-3">
+                      <div className="flex items-center gap-4">
                         <Slider
                           defaultValue={[field.value]}
+                          value={[field.value]}
                           min={1}
                           max={5}
                           step={1}
                           onValueChange={(v) => field.onChange(v[0])}
-                          className="flex-grow mood-slider"
+                          className="flex-1 mood-slider"
                         />
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <div className="font-medium w-12 text-center flex items-center justify-center space-x-1 cursor-default">
-                              <span>{moodMap[field.value]?.emoji || "😐"}</span>
-                              <span>({field.value})</span>
-                            </div>
+                            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300 cursor-default">
+                              {moodMap[field.value]?.emoji || "😐"}
+                            </span>
                           </TooltipTrigger>
                           <TooltipContent>
                             <p>{moodMap[field.value]?.label || "Neutral"}</p>
@@ -249,24 +250,28 @@ export default function DreamInputForm() {
                 control={form.control}
                 name="tags"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col">
+                  <FormItem className="space-y-2">
                     <FormLabel>Tags</FormLabel>
                     <FormControl>
-                       <Combobox
-                         options={TAGS}
-                         selected={field.value || []}
-                         onChange={field.onChange}
-                         placeholder="Select or create tags..."
-                         allowFreeText={true}
-                       />
+                      <Combobox
+                        options={TAGS}
+                        selected={field.value || []}
+                        onChange={field.onChange}
+                        placeholder="Add tags..."
+                        className="h-auto min-h-[28px] text-xs border-dashed border-purple-200 dark:border-slate-700 justify-start font-normal"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Analyzing...</> : "Analyze Dream"}
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-purple-600 hover:bg-purple-700 text-white dark:bg-purple-500 dark:hover:bg-purple-600 disabled:opacity-70"
+              >
+                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                Analyze Dream
               </Button>
             </form>
           </Form>

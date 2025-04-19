@@ -20,11 +20,12 @@ interface MotifCloudProps {
 
 // Custom renderer for tags to handle clicks
 // Explicitly type the tag and props parameters
-const customTagRenderer = (tag: TagCloudTag, size: number, color: string, props?: React.HTMLAttributes<HTMLSpanElement> & { key?: React.Key }) => {
-  const { key, onClick, ...otherProps } = props || {}; // Extract key and onClick
+const customTagRenderer = (tag: TagCloudTag, size: number, color: string, props?: React.HTMLAttributes<HTMLSpanElement>) => {
+  // We will rely on the key provided by TagCloud's internal map, not spreading from props here.
+  const { onClick, ...otherProps } = props || {}; 
   return (
     <span 
-      key={key} 
+      // key prop should be handled by TagCloud's internal mapping
       style={{ 
         fontSize: `${size}px`, 
         color: color, 

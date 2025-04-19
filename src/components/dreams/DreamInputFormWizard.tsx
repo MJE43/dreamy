@@ -185,8 +185,12 @@ export default function DreamInputFormWizard({ onDreamSaved }: { onDreamSaved?: 
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full" disabled={step === "analyzing"}>
-                {step === "analyzing" ? "Analyzing..." : "Analyze Dream"}
+              <Button 
+                type="submit" 
+                className="w-full" 
+                disabled={form.formState.isSubmitting}
+              >
+                {form.formState.isSubmitting ? "Analyzing..." : "Analyze Dream"}
               </Button>
             </form>
           </Form>
@@ -209,7 +213,7 @@ export default function DreamInputFormWizard({ onDreamSaved }: { onDreamSaved?: 
               <Button type="button" variant="secondary" onClick={handleEdit} disabled={isSaving}>
                 Edit Dream
               </Button>
-              <Button type="button" onClick={handleSave} loading={isSaving}>
+              <Button type="button" onClick={handleSave} disabled={isSaving}>
                 Save Dream
               </Button>
             </div>

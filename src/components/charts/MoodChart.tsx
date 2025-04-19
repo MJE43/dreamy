@@ -3,7 +3,7 @@
 import * as React from "react"
 import {
   Area,
-  CartesianGrid,
+  // CartesianGrid, // Removed unused import
   Line,
   LineChart,
   XAxis,
@@ -82,7 +82,7 @@ export default function MoodChart({ data }: MoodChartProps) {
                     className="bg-popover text-popover-foreground shadow-md rounded-md px-3 py-2 text-sm" 
                     nameKey="mood" // This will show the score
                     labelFormatter={(value) => `Date: ${value}`} // Format the label (date)
-                    formatter={(value, name, props) => [`Score: ${value}`, null]} // Format the value display
+                    formatter={(value /*, name, props */) => [`Score: ${value}`, null]} // Format the value display, removed unused name/props
                   />
                 } 
             />

@@ -6,7 +6,6 @@ import { useSession, signIn, signOut } from 'next-auth/react'
 import { useTheme } from "next-themes"
 import { Moon, Sun, Settings } from "lucide-react"
 import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
