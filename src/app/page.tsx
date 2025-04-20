@@ -135,7 +135,7 @@ export default async function Page() { // Renamed to Page
   return (
     // Removed outer div from previous version, body already has gradient
     // <div className="min-h-screen bg-gradient-to-b from-purple-50 to-indigo-50 dark:from-slate-950 dark:to-purple-950">
-      <div className="container mx-auto px-4 py-6">
+      <div className="px-4 py-6">
         {/* Header - Using v0 structure */}
         {/* Consider removing Header from layout.tsx if this is preferred */}
         <header className="flex items-center justify-between mb-8">
