@@ -11,7 +11,10 @@ function Card({ className, ...props }: React.ComponentProps<typeof motion.div>) 
     <motion.div
       data-slot="card"
       className={cn(
-        "bg-card text-card-foreground flex flex-col gap-6 rounded-2xl py-6 ring-1 ring-slate-700 shadow-xl",
+        "bg-gradient-to-b from-indigo-800 to-indigo-950 border border-indigo-400/40 text-card-foreground flex flex-col gap-6 rounded-2xl py-6",
+        "shadow-[0_10px_20px_rgba(0,0,0,0.3),_inset_0_1px_3px_rgba(255,255,255,0.06)]",
+        "transition-all duration-200 ease-out",
+        "hover:-translate-y-0.5 hover:shadow-[0_15px_30px_rgba(0,0,0,0.4),_inset_0_1px_3px_rgba(255,255,255,0.06)]",
         className
       )}
       initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
@@ -39,7 +42,7 @@ function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card-title"
-      className={cn("leading-none font-semibold", className)}
+      className={cn("text-lg font-semibold leading-none tracking-tight", className)}
       {...props}
     />
   )
@@ -49,7 +52,7 @@ function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card-description"
-      className={cn("text-muted-foreground text-sm", className)}
+      className={cn("text-sm text-muted-foreground", className)}
       {...props}
     />
   )
