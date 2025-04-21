@@ -8,13 +8,27 @@ import TextareaAutosize from 'react-textarea-autosize'
 import { toast } from "sonner"
 import { useRouter } from 'next/navigation'
 import { Loader2 } from "lucide-react"
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
 import { Slider } from "@/components/ui/slider"
 import { Combobox } from "@/components/ui/combobox"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Progress } from "@/components/ui/progress"
 import { useLiveRegion } from "@/context/LiveRegionContext"
+import { cn } from "@/lib/utils";
+// Import the structured analysis type
+import { StructuredDreamAnalysis } from "@/lib/schemas/dreamAnalysis";
+
+// Import new analysis components using alias
+import { AnalysisSummary } from '@/components/analysis/AnalysisSummary';
+import { SymbolExplorer } from '@/components/analysis/SymbolExplorer';
+import { ArchetypeGallery } from '@/components/analysis/ArchetypeGallery';
+import { EmotionalThemesPanel } from '@/components/analysis/EmotionalThemesPanel';
+import { NarrativeAnalysis } from '@/components/analysis/NarrativeAnalysis';
+import { PersonalConnections } from '@/components/analysis/PersonalConnections';
+import { PatternRecognition } from '@/components/analysis/PatternRecognition';
+import { PerspectiveAnalysis } from '@/components/analysis/PerspectiveAnalysis';
+import { GuidedReflection } from '@/components/analysis/GuidedReflection';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -54,11 +68,23 @@ const moodMap: { [key: number]: { emoji: string; label: string } } = {
   5: { emoji: "😄", label: "Very Positive" },
 };
 
+// Helper component for section layout (removed unused defaultOpen)
+const AnalysisSection = ({ title, children }: { title: string, children: React.ReactNode }) => (
+  <Card className="bg-background/10 border-slate-200 dark:border-slate-800 shadow-sm">
+    <CardHeader className="p-3">
+      <CardTitle className="text-base font-semibold">{title}</CardTitle>
+    </CardHeader>
+    <CardContent className="p-3 pt-0">
+      {children}
+    </CardContent>
+  </Card>
+);
+
 export default function DreamInputForm() {
   const [step, setStep] = React.useState<1 | 2>(1);
   const [isLoading, setIsLoading] = React.useState(false);
-  const [analysisResult, setAnalysisResult] = React.useState<string | null>(null);
-  const [formData, setFormData] = React.useState<DreamFormData | null>(null); // Store form data for saving
+  const [analysisResult, setAnalysisResult] = React.useState<StructuredDreamAnalysis | null>(null);
+  const [formData, setFormData] = React.useState<DreamFormData | null>(null);
   const router = useRouter();
   const { announce } = useLiveRegion();
 
@@ -75,11 +101,11 @@ export default function DreamInputForm() {
   async function handleAnalyzeDream(values: DreamFormData) {
     setIsLoading(true);
     setAnalysisResult(null);
-    setFormData(values); // Store current form data
+    setFormData(values);
     const dataToSend = { ...values, tags: values.tags?.join(",") || "" };
 
     try {
-      // Call the new analysis-only endpoint
+      // Call the analysis-only endpoint
       const response = await fetch('/api/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -88,12 +114,13 @@ export default function DreamInputForm() {
 
       const result = await response.json();
 
-      if (!response.ok) {
+      if (!response.ok || !result.ok) {
         throw new Error(result.error || 'Failed to analyze dream');
       }
 
+      // Expect result.analysis to be the StructuredDreamAnalysis object
       if (result.analysis) {
-        setAnalysisResult(result.analysis);
+        setAnalysisResult(result.analysis as StructuredDreamAnalysis);
         setStep(2); // Move to analysis view step
         announce("Dream analysis ready.");
       } else {
@@ -120,7 +147,8 @@ export default function DreamInputForm() {
     const dataToSave = {
       ...formData,
       tags: formData.tags?.join(",") || "",
-      analysisContent: analysisResult, // Include the analysis
+      // Stringify the analysis object before sending
+      analysisContent: JSON.stringify(analysisResult),
     };
 
     try {
@@ -133,8 +161,13 @@ export default function DreamInputForm() {
 
       const result = await response.json();
 
-      if (!response.ok) {
-        throw new Error(result.error || 'Failed to save dream');
+      if (!response.ok || !result.ok) {
+        // Include analysisPersisted status in error if available
+        let errorMsg = result.error || 'Failed to save dream';
+        if (result.hasOwnProperty('analysisPersisted') && !result.analysisPersisted) {
+            errorMsg += ' (Analysis could not be saved)';
+        }
+        throw new Error(errorMsg);
       }
 
       toast.success("Dream saved successfully!");
@@ -175,10 +208,9 @@ export default function DreamInputForm() {
     // Default Step 1 view
     return (
       <div className="flex items-center justify-end space-x-1 mb-4 text-xs text-muted-foreground">
-        <span className="font-medium text-purple-600 dark:text-purple-400">1</span>
-        <span>Write Dream</span>
+        <span className={cn("font-medium", step === 1 ? "text-purple-600 dark:text-purple-400" : "")}>1 Write Dream</span>
         <span className="mx-1">→</span>
-        <span>2 View Analysis</span>
+        <span className={cn("font-medium", step === 2 ? "text-purple-600 dark:text-purple-400" : "")}>2 View Analysis</span>
       </div>
     );
   };
@@ -284,25 +316,59 @@ export default function DreamInputForm() {
                    <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
                </div>
              )}
-             {/* Analysis Display */} 
-             <div className="border rounded-md min-h-[200px] max-h-[350px] overflow-y-auto p-3 bg-muted/30">
+             {/* Analysis Display - Use new components */}
+             <div className="border rounded-md min-h-[200px] max-h-[500px] overflow-y-auto p-4 bg-muted/20 space-y-5">
                 {analysisResult ? (
-                   <ReactMarkdown
-                     remarkPlugins={[remarkGfm]}
-                     components={{
-                       h1: ({ ...props }) => <h1 className="text-xl font-bold my-3" {...props} />,
-                       h2: ({ ...props }) => <h2 className="text-lg font-semibold my-2" {...props} />,
-                       p: ({ ...props }) => <p className="mb-2 leading-relaxed" {...props} />,
-                       ul: ({ ...props }) => <ul className="list-disc list-inside mb-3 space-y-1" {...props} />,
-                       ol: ({ ...props }) => <ol className="list-decimal list-inside mb-3 space-y-1" {...props} />,
-                       li: ({ ...props }) => <li className="ml-4" {...props} />,
-                       a: ({ ...props }) => <a className="text-blue-600 hover:underline dark:text-blue-400" {...props} />,
-                     }}
-                   >
-                        {analysisResult}
-                   </ReactMarkdown>
+                   <div className="space-y-4">
+                     <AnalysisSummary summary={analysisResult.summary} />
+                     
+                     <Separator />
+
+                     <AnalysisSection title="Key Symbols">
+                       <SymbolExplorer symbols={analysisResult.keySymbols} />
+                     </AnalysisSection>
+
+                     <AnalysisSection title="Archetypes">
+                       <ArchetypeGallery archetypes={analysisResult.archetypes} />
+                     </AnalysisSection>
+                     
+                     <AnalysisSection title="Emotional Themes">
+                       <EmotionalThemesPanel themes={analysisResult.emotionalThemes} />
+                     </AnalysisSection>
+
+                     {/* Render Optional Sections Conditionally */} 
+                     {analysisResult.narrativeAnalysis && (Object.keys(analysisResult.narrativeAnalysis).length > 0 && (Object.values(analysisResult.narrativeAnalysis).some(v => v && v.trim() !== ''))) && (
+                       <AnalysisSection title="Narrative Flow">
+                         <NarrativeAnalysis narrative={analysisResult.narrativeAnalysis} />
+                       </AnalysisSection>
+                     )}
+                      
+                     {analysisResult.personalConnections && analysisResult.personalConnections.length > 0 && (
+                        <AnalysisSection title="Waking Life Connections">
+                           <PersonalConnections connections={analysisResult.personalConnections} />
+                        </AnalysisSection>
+                     )}
+
+                     {analysisResult.patternRecognition && (analysisResult.patternRecognition.recurringSymbols?.length || analysisResult.patternRecognition.evolutionNotes) && (
+                       <AnalysisSection title="Pattern Recognition">
+                         <PatternRecognition patterns={analysisResult.patternRecognition} />
+                       </AnalysisSection>
+                     )}
+
+                     {analysisResult.analysis && (Object.keys(analysisResult.analysis).length > 0 && (Object.values(analysisResult.analysis).some(v => v && v.trim() !== ''))) && (
+                       <AnalysisSection title="Psychological Perspectives">
+                          <PerspectiveAnalysis perspectives={analysisResult.analysis} />
+                       </AnalysisSection>
+                     )}
+                     
+                      <Separator />
+                      
+                     <AnalysisSection title="Guided Reflection">
+                       <GuidedReflection questions={analysisResult.guidedReflection} />
+                     </AnalysisSection>
+                   </div>
                 ) : (
-                  <p className="text-muted-foreground">No analysis available.</p>
+                  <p className="text-muted-foreground text-center py-8">No analysis available or analysis failed.</p>
                 )}
              </div>
 
