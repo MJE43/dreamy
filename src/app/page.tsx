@@ -193,35 +193,28 @@ export default async function Page() { // Renamed to Page
             {/* </CardFooter> */}
           </Card>
 
-          {/* Middle Column - Insights */}
-          <Card className="md:col-span-1">
-            <CardHeader>
-              {/* Replace previous content with InsightsClient */}
-              <Suspense fallback={<Skeleton className="h-[350px] w-full" />}> {/* Add suspense boundary */}
-                <InsightsClient
-                  moodData={moodData}
-                  topMotifs={topMotifs}
-                  hasEnoughMoodData={hasEnoughMoodData}
-                />
-              </Suspense>
-            </CardHeader>
-            <CardContent>
+          {/* Middle Column - Insights & Patterns - Restructured */}
+          <Card className="md:col-span-1 flex flex-col">
+            <CardContent className="flex-grow space-y-4 p-4">
+              {/* Wrap InsightsClient in a div with explicit height */}
+              <div className="h-[350px]"> {/* Match skeleton height */} 
+                <Suspense fallback={<Skeleton className="h-full w-full" />}> {/* Adjust skeleton */} 
+                  <InsightsClient
+                    moodData={moodData}
+                    topMotifs={topMotifs}
+                    hasEnoughMoodData={hasEnoughMoodData}
+                  />
+                </Suspense>
+              </div>
+
+              {/* Dream Patterns Section - Should now render below the fixed-height div */}
               <div className="space-y-2">
                 <h3 className="text-sm font-medium">Dream Patterns</h3>
                 <div className="grid grid-cols-2 gap-2">
-                  {/* Use fetched data */}
                   <div className="rounded-md bg-purple-50 p-3 dark:bg-slate-800">
                     <p className="text-xs font-medium text-purple-700 dark:text-purple-300">Recurring Themes</p>
                     <p className="text-lg font-bold text-purple-900 dark:text-purple-100">{recurringThemesCount ?? 'N/A'}</p>
                   </div>
-                  {/* Commenting out Lucid Dreams display */}
-                  {/*
-                  <div className="rounded-md bg-indigo-50 p-3 dark:bg-slate-800">
-                    <p className="text-xs font-medium text-indigo-700 dark:text-indigo-300">Lucid Dreams</p>
-                    <p className="text-lg font-bold text-indigo-900 dark:text-indigo-100">{lucidDreamsCount ?? 'N/A'}</p>
-                  </div>
-                  */}
-                  {/* Add a placeholder or adjust grid if only one item */}
                    <div className="rounded-md bg-indigo-50 p-3 dark:bg-slate-800 flex items-center justify-center">
                      <p className="text-xs font-medium text-indigo-700 dark:text-indigo-300 text-center">Lucid Dream tracking coming soon!</p>
                    </div>
@@ -229,7 +222,6 @@ export default async function Page() { // Renamed to Page
               </div>
             </CardContent>
             <CardFooter className="flex justify-center border-t pt-4 dark:border-slate-700">
-              {/* TODO: Link button */}
               <Button variant="outline" className="text-xs text-muted-foreground">
                 View Full Analysis
               </Button>

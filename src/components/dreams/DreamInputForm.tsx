@@ -319,10 +319,10 @@ export default function DreamInputForm() {
              {/* Analysis Display - Use new components */}
              <div className="border rounded-md min-h-[200px] max-h-[500px] overflow-y-auto p-4 bg-muted/20 space-y-5">
                 {analysisResult ? (
-                   <div className="space-y-4">
+                   <div>
                      <AnalysisSummary summary={analysisResult.summary} />
                      
-                     <Separator />
+                     <Separator className="my-4" />
 
                      <AnalysisSection title="Key Symbols">
                        <SymbolExplorer symbols={analysisResult.keySymbols} />
@@ -361,7 +361,7 @@ export default function DreamInputForm() {
                        </AnalysisSection>
                      )}
                      
-                      <Separator />
+                      <Separator className="my-4" />
                       
                      <AnalysisSection title="Guided Reflection">
                        <GuidedReflection questions={analysisResult.guidedReflection} />

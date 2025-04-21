@@ -53,7 +53,9 @@ export default function InsightsClient({ moodData, topMotifs, hasEnoughMoodData 
       <TabsContent value="mood" className="pt-4">
         {hasEnoughMoodData ? (
           <Suspense fallback={<Skeleton className="h-[250px] w-full" />}>
-            <DynamicMoodChart data={moodData} />
+            <div className="h-[250px] w-full">
+              <DynamicMoodChart data={moodData} />
+            </div>
           </Suspense>
         ) : (
           <div className="flex h-[250px] items-center justify-center rounded-md border border-dashed border-purple-200 bg-purple-50 p-4 dark:border-slate-700 dark:bg-slate-800/50">
@@ -66,11 +68,15 @@ export default function InsightsClient({ moodData, topMotifs, hasEnoughMoodData 
           </div>
         )}
       </TabsContent>
-      <TabsContent value="motifs" className="pt-4">
+      <TabsContent 
+        value="motifs" 
+        className="pt-4 h-[280px] relative overflow-hidden"
+      >
         {topMotifs.length > 0 ? (
-          <Suspense fallback={<Skeleton className="h-[250px] w-full" />}>
-            {/* Pass motif click handler if needed */}
-            <DynamicMotifCloud motifs={topMotifs} /* onTagClick={handleMotifClick} */ />
+          <Suspense fallback={<Skeleton className="h-full w-full" />}>
+            <div className="h-full w-full overflow-hidden">
+              <DynamicMotifCloud motifs={topMotifs} />
+            </div>
           </Suspense>
         ) : (
           <div className="flex h-[250px] items-center justify-center rounded-md border border-dashed border-purple-200 bg-purple-50 p-4 dark:border-slate-700 dark:bg-slate-800/50">
