@@ -48,7 +48,7 @@ export default function MotifCloud({ motifs, onMotifClick }: MotifCloudProps) {
   if (!motifs || motifs.length === 0) {
     return (
       <Card>
-        <CardHeader><CardTitle className="text-xl">Motif Cloud</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">Motif Cloud</CardTitle></CardHeader>
         <CardContent>
           <p className="text-muted-foreground text-sm">No motifs found yet. Add tags to your dreams!</p>
         </CardContent>
@@ -59,28 +59,28 @@ export default function MotifCloud({ motifs, onMotifClick }: MotifCloudProps) {
   // Map data to the format expected by react-tagcloud
   const data: TagCloudTag[] = motifs.map(motif => ({ value: motif.tag, count: motif.count }));
 
-  // Explicitly type the options object
-  const options: ColorOptions = {
-    luminosity: 'dark', // Use 'dark' for light text on dark background
-    hue: 'blue',       // Base hue for tag colors (can be specific hex/rgb too)
+  // Define controlled color options directly
+  const colorOptions: ColorOptions = {
+      luminosity: 'dark', // Keep dark for light text on dark background
+      hue: 'purple' // Set a base hue like purple or blue (adjust as needed)
+      // Consider 'random' if you want more color variety automatically
+      // hue: 'random', 
   };
 
   return (
-    <Card>
-      <CardHeader><CardTitle className="text-xl">Motif Cloud</CardTitle></CardHeader>
-      <CardContent>
-        {/* Use a div container to constrain the cloud size */}
-        <div className="w-full aspect-video max-h-[250px] overflow-hidden flex items-center justify-center p-4">
-          <TagCloud
-            minSize={12}
-            maxSize={35}
-            tags={data}
-            colorOptions={options} // Pass the typed options object
-            onClick={(tag: TagCloudTag) => onMotifClick?.(tag.value)} // Call onMotifClick with the tag value
-            renderer={customTagRenderer} // Use the custom renderer
-            className="text-center" // Optional: center align text if needed
-          />
-        </div>
+    <Card className="h-full w-full"> 
+      <CardHeader className="pt-4 pb-2 px-4"><CardTitle className="text-base">Motif Cloud</CardTitle></CardHeader>
+      <CardContent className="flex-grow flex items-center justify-center p-2 min-h-[200px]"> 
+        <TagCloud
+          minSize={14} 
+          maxSize={40} 
+          tags={data}
+          colorOptions={colorOptions} // Use the defined color options
+          onClick={(tag: TagCloudTag) => onMotifClick?.(tag.value)} 
+          renderer={customTagRenderer} 
+          className="text-center cursor-default" 
+          shuffle={true} // Re-enable shuffle for dynamism, can be false if needed
+        />
       </CardContent>
     </Card>
   );
