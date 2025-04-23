@@ -6,7 +6,7 @@ export type RecentDream = {
   createdAt: Date;
   description: string;
   mood: number;
-  tags: string | null;
+  tags: string[] | null;
   analysis: {
     content: string;
   } | null;

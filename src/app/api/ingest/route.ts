@@ -106,14 +106,20 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid input', details: validation.error.errors }, { status: 400 })
     }
 
-    const { description, mood, tags, analysisContent: preGeneratedAnalysisString } = validation.data
+    const { description, mood, tags: tagsString, analysisContent: preGeneratedAnalysisString } = validation.data
+
+    // Split tags string into array, or use empty array if undefined/null
+    let tagsArray: string[] = [];
+    if (tagsString) {
+      tagsArray = tagsString.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
+    }
 
     // 1. Insert the new dream (using actual userId)
     const newDream = await prisma.dream.create({
       data: {
         description,
         mood,
-        tags: tags || "",
+        tags: tagsArray, // Use the processed array
         userId: userId, // This now uses the Supabase user ID
       },
     })

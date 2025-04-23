@@ -50,7 +50,8 @@ export default function RecentDreamsList({ dreams }: RecentDreamsListProps) {
             {/* Tags */}
             {dream.tags && (
               <div className="mt-2 flex flex-wrap gap-1">
-                {dream.tags.split(',').map((tag) => {
+                {/* TODO: Refactor tag splitting due to schema change (tags is now String[]) - Removed split */}
+                {dream.tags.map((tag) => { // Map directly over the array
                   const trimmedTag = tag.trim();
                   if (!trimmedTag) return null; // Skip empty tags
                   return (

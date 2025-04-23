@@ -21,7 +21,7 @@ model Dream {
   updatedAt   DateTime  @updatedAt
   description String
   mood        Int       // Add mood (e.g., 1-5)
-  tags        String    // Store tags as a delimited string
+  tags        String[]  // ⬅︎ switched from delimited string → Postgres text[]
   userId      String    // This will store the Supabase Auth user UUID
   analysis    Analysis? // A dream can have zero or one analysis
 
@@ -35,4 +35,41 @@ model Analysis {
   content   String // The actual analysis content from the LLM
   dreamId   String   @unique // Each analysis belongs to exactly one dream
   dream     Dream    @relation(fields: [dreamId], references: [id], onDelete: Cascade)
+}
+
+/* ──────────── NEW TABLES FOR SPIRAL-COACH FEATURES ──────────── */
+
+model SpiralProfile {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  userId        String            // Supabase Auth UUID
+  stageBlend    Json                      // e.g. {"green":0.6,"orange":0.3,"yellow":0.1}
+  dominantBias  String?                   // optional narrative tag
+
+  @@index([userId])
+}
+
+model Goal {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      String
+  title       String
+  targetDate  DateTime?
+  plan        Json                       // milestones array
+  progressLog Json?                      // [{date:"…",percent:30}, …]
+  completed   Boolean  @default(false)
+
+  @@index([userId])
+}
+
+model CheckIn {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  userId      String
+  mood        Int
+  stressLevel Int?
+  notes       String?
+
+  @@index([userId])
 }

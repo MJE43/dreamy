@@ -135,9 +135,47 @@ exports.Prisma.AnalysisScalarFieldEnum = {
   dreamId: 'dreamId'
 };
 
+exports.Prisma.SpiralProfileScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  userId: 'userId',
+  stageBlend: 'stageBlend',
+  dominantBias: 'dominantBias'
+};
+
+exports.Prisma.GoalScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  userId: 'userId',
+  title: 'title',
+  targetDate: 'targetDate',
+  plan: 'plan',
+  progressLog: 'progressLog',
+  completed: 'completed'
+};
+
+exports.Prisma.CheckInScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  userId: 'userId',
+  mood: 'mood',
+  stressLevel: 'stressLevel',
+  notes: 'notes'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -145,10 +183,24 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive'
 };
 
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
 
 exports.Prisma.ModelName = {
   Dream: 'Dream',
-  Analysis: 'Analysis'
+  Analysis: 'Analysis',
+  SpiralProfile: 'SpiralProfile',
+  Goal: 'Goal',
+  CheckIn: 'CheckIn'
 };
 
 /**

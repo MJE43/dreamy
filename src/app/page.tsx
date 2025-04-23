@@ -51,11 +51,11 @@ export default async function Page() {
   });
 
   // Keep helper function for motifs
-  function getTopMotifs(dreams: { tags: string | null }[], count: number): MotifData[] {
+  function getTopMotifs(dreams: { tags: string[] | null }[], count: number): MotifData[] {
     const tagCounts: { [key: string]: number } = {};
     dreams.forEach(dream => {
       if (dream.tags) {
-        dream.tags.split(',').forEach(tag => {
+        dream.tags.forEach(tag => {
           const trimmedTag = tag.trim().toLowerCase();
           if (trimmedTag) {
             tagCounts[trimmedTag] = (tagCounts[trimmedTag] || 0) + 1;
