@@ -69,37 +69,39 @@ export default function DashboardClient({
   // No need for loading state or session check here, handled by server component
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[minmax(auto,_24rem)_1fr_20rem] gap-6">
+    <div className="container mx-auto px-4 py-6 md:px-6 lg:py-8">
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(auto,_24rem)_1fr_20rem] gap-6">
 
-      {/* --- Column 1: Input & Title --- */}
-      <div className="lg:col-span-1 space-y-6">
-        <Card>
-          <CardHeader><CardTitle className="text-xl">New Dream</CardTitle></CardHeader>
-          <CardContent><DreamInputForm /></CardContent> {/* Needs logic to update state */}
-        </Card>
+        {/* --- Column 1: Input & Title --- */}
+        <div className="lg:col-span-1 space-y-6">
+          <Card>
+            <CardHeader><CardTitle className="text-xl">New Dream</CardTitle></CardHeader>
+            <CardContent><DreamInputForm /></CardContent> {/* Needs logic to update state */}
+          </Card>
+        </div>
+
+        {/* --- Column 2: Insights --- */}
+        <div className="lg:col-span-1 space-y-6">
+          <MoodChart data={moodData} />
+          <MotifCloud motifs={topMotifs} onMotifClick={handleMotifClick} />
+        </div>
+
+        {/* --- Column 3: Recent Dreams (Sidebar) --- */}
+        <div className="lg:col-span-1 lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)] lg:overflow-y-auto xxl:fixed xxl:right-0 xxl:top-0 xxl:bottom-0 xxl:w-80 xxl:border-l xxl:border-border xxl:bg-background xxl:p-6 xxl:pt-20">
+          <RecentDreamsList dreams={filteredDreams} />
+        </div>
+
+        {/* --- Mobile FAB --- */}
+        <Button
+          className="fixed bottom-6 right-6 lg:hidden rounded-full w-14 h-14 shadow-lg z-50"
+          size="icon"
+          // TODO: Add onClick to open modal
+        >
+          <Plus className="h-6 w-6" />
+          <span className="sr-only">New Dream</span>
+        </Button>
+
       </div>
-
-      {/* --- Column 2: Insights --- */}
-      <div className="lg:col-span-1 space-y-6">
-        <MoodChart data={moodData} />
-        <MotifCloud motifs={topMotifs} onMotifClick={handleMotifClick} />
-      </div>
-
-      {/* --- Column 3: Recent Dreams (Sidebar) --- */}
-      <div className="lg:col-span-1 lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)] lg:overflow-y-auto xxl:fixed xxl:right-0 xxl:top-0 xxl:bottom-0 xxl:w-80 xxl:border-l xxl:border-border xxl:bg-background xxl:p-6 xxl:pt-20">
-        <RecentDreamsList dreams={filteredDreams} />
-      </div>
-
-      {/* --- Mobile FAB --- */}
-      <Button
-        className="fixed bottom-6 right-6 lg:hidden rounded-full w-14 h-14 shadow-lg z-50"
-        size="icon"
-        // TODO: Add onClick to open modal
-      >
-        <Plus className="h-6 w-6" />
-        <span className="sr-only">New Dream</span>
-      </Button>
-
     </div>
   );
 } 

@@ -1,7 +1,7 @@
 'use client' // Added 'use client' because actions will be client-side
 
 import React from 'react';
-// Removed Link, useRouter, toast, Accordion, Button, icons as they are no longer used here
+import { useRouter } from 'next/navigation'; // Import useRouter
 import { Badge } from "@/components/ui/badge"; // Import Badge for tags and status
 import { RecentDream } from "@/types"; // Import shared type
 
@@ -15,7 +15,7 @@ interface RecentDreamsListProps {
 // Removed getSynopsis, handleDelete, handleShare functions
 
 export default function RecentDreamsList({ dreams }: RecentDreamsListProps) {
-  // Removed router hook
+  const router = useRouter(); // Get router instance
 
   return (
     // Remove Card wrapper, Card is applied in page.tsx
@@ -28,7 +28,7 @@ export default function RecentDreamsList({ dreams }: RecentDreamsListProps) {
           <div
             key={dream.id}
             className="rounded-lg border border-purple-100 p-3 transition-colors hover:bg-purple-50 dark:border-slate-700 dark:hover:bg-slate-800 cursor-pointer" // Added cursor-pointer, can link later
-            // onClick={() => { /* TODO: Navigate to dream detail page? */ }}
+            onClick={() => router.push(`/dream/${dream.id}`)} // Add navigation onClick
           >
             {/* Top row: Date and Analyzed Badge */}
             <div className="flex items-center justify-between">

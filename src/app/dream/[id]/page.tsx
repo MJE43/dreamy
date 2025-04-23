@@ -1,5 +1,7 @@
 import { PrismaClient } from '@/generated/prisma';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
+import { cookies } from 'next/headers';
+import { createSupabaseServerClient } from '@/lib/supabase';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { StructuredDreamAnalysis } from "@/lib/schemas/dreamAnalysis";
@@ -41,6 +43,19 @@ const AnalysisSection = ({ title, children }: { title: string, children: React.R
 
 // This is a Server Component by default in the App Router
 export default async function DreamPage({ params }: DreamIdPageProps) {
+  // --- Supabase Auth Check ---
+  const cookieStore = await cookies();
+  const supabase = createSupabaseServerClient(cookieStore);
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    // Redirect to login if not authenticated, maybe preserve target url?
+    // For simplicity, just redirect to login for now.
+    redirect('/login'); 
+  }
+  const userId = user.id;
+  // --- End Auth Check ---
+
   const resolvedParams = await params;
   const { id } = resolvedParams;
 
@@ -48,13 +63,18 @@ export default async function DreamPage({ params }: DreamIdPageProps) {
     notFound();
   }
 
+  // Fetch dream ONLY if it matches ID AND belongs to the logged-in user
   const dream = await prisma.dream.findUnique({
-    where: { id: id },
+    where: {
+      id: id,
+      userId: userId, // Ensure the user owns this dream
+    },
     include: { analysis: true },
   });
 
+  // If dream is null here, it means either it doesn't exist OR the user doesn't own it.
   if (!dream) {
-    notFound();
+    notFound(); // Treat as not found for security
   }
 
   // Attempt to parse the analysis content
