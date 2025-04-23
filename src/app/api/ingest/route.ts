@@ -2,9 +2,9 @@ import { NextResponse } from 'next/server'
 import { PrismaClient, Dream } from '@/generated/prisma'
 import * as z from 'zod'
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { getServerSession } from "next-auth/next"
-import { authOptions } from "@/lib/authOptions"; // New path
 import { dreamAnalysisSchema, StructuredDreamAnalysis } from '@/lib/schemas/dreamAnalysis';
+import { createSupabaseServerClient } from '@/lib/supabase';
+import { cookies } from 'next/headers';
 
 const prisma = new PrismaClient()
 
@@ -79,14 +79,17 @@ For arrays like \`keySymbols\`, \`archetypes\`, \`emotionalThemes\`, \`personalC
 }
 
 export async function POST(request: Request) {
-  // Get session data
-  const session = await getServerSession(authOptions)
+  // Get Supabase session/user
+  const cookieStore = await cookies();
+  const supabase = createSupabaseServerClient(cookieStore);
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
 
   // Check if user is authenticated
-  if (!session || !session.user || !session.user.id) {
+  if (authError || !user) {
+    console.error('Ingest API - Auth Error:', authError);
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-  const userId = session.user.id; // Use the actual user ID from session
+  const userId = user.id; // Use the Supabase user ID
 
   // Check for Gemini API key (can stay here or be moved)
   if (!process.env.GOOGLE_API_KEY) {
@@ -111,7 +114,7 @@ export async function POST(request: Request) {
         description,
         mood,
         tags: tags || "",
-        userId: userId, // Use the authenticated user's ID
+        userId: userId, // This now uses the Supabase user ID
       },
     })
 
@@ -145,7 +148,7 @@ export async function POST(request: Request) {
       console.log(`Generating analysis for dream ${newDream.id} for user ${userId}...`)
        // Fetch recent dreams for context (includes the one just created)
       const recentDreams = await prisma.dream.findMany({
-          where: { userId: userId },
+          where: { userId: userId }, // This uses the Supabase user ID
           orderBy: { createdAt: 'desc' },
           take: 5, // Fetch 5 to pass up to 4 previous ones (newDream + 4 history) to the prompt
       });

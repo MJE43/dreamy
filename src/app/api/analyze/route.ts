@@ -2,9 +2,9 @@ import { NextResponse } from 'next/server';
 import { PrismaClient, Dream } from '@/generated/prisma';
 import * as z from 'zod';
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/authOptions";
 import { dreamAnalysisSchema, StructuredDreamAnalysis } from '@/lib/schemas/dreamAnalysis';
+import { createSupabaseServerClient } from '@/lib/supabase';
+import { cookies } from 'next/headers';
 
 const prisma = new PrismaClient();
 
@@ -74,12 +74,15 @@ For arrays like \`keySymbols\`, \`archetypes\`, \`emotionalThemes\`, \`personalC
 }
 
 export async function POST(request: Request) {
-  const session = await getServerSession(authOptions);
+  const cookieStore = await cookies();
+  const supabase = createSupabaseServerClient(cookieStore);
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-  if (!session?.user?.id) {
+  if (authError || !user) {
+    console.error('Analyze API - Auth Error:', authError);
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-  const userId = session.user.id;
+  const userId = user.id;
 
   if (!process.env.GOOGLE_API_KEY) {
     return NextResponse.json({ error: "Server configuration error: Missing API Key for analysis." }, { status: 500 });

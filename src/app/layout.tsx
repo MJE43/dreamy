@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
-import AuthProvider from "@/components/auth/AuthProvider";
-// import Header from "@/components/layout/Header"; // Removed unused import
+import SessionProvider from "@/components/auth/SessionProvider";
+import Header from "@/components/layout/Header";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { LiveRegionProvider } from "@/context/LiveRegionContext";
+import SupabaseProvider from "@/components/providers/SupabaseProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,21 +46,23 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <AuthProvider>
-            <LiveRegionProvider>
-              <div className="flex flex-col min-h-screen">
-                {/* <Header /> */}
-                <main className="flex-grow">
-                  {children}
-                </main>
-              </div>
-              <Toaster 
-                richColors 
-                position="bottom-center" 
-                theme="system"
-              />
-            </LiveRegionProvider>
-          </AuthProvider>
+          <SupabaseProvider>
+            <SessionProvider>
+              <LiveRegionProvider>
+                <div className="flex flex-col min-h-screen">
+                  <Header />
+                  <main className="flex-grow">
+                    {children}
+                  </main>
+                </div>
+                <Toaster 
+                  richColors 
+                  position="bottom-center" 
+                  theme="system"
+                />
+              </LiveRegionProvider>
+            </SessionProvider>
+          </SupabaseProvider>
         </ThemeProvider>
       </body>
     </html>

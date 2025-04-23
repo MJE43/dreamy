@@ -1,11 +1,12 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useSession, signIn, signOut } from 'next-auth/react'
 import { useTheme } from "next-themes"
 import { Moon, Sun, Settings } from "lucide-react"
 import { Button } from '@/components/ui/button'
+import { useUser } from '@supabase/auth-helpers-react'
+import SignOutButton from '@/components/auth/SignOutButton'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -57,15 +58,23 @@ function SettingsMenu() {
            <a href="mailto:feedback@example.com">Send Feedback</a> 
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => signOut()}>Sign Out</DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <SignOutButton variant="ghost" className="w-full justify-start p-0 font-normal" />
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )
 }
 
 export default function Header() {
-  const { data: session, status } = useSession()
-  const isLoading = status === 'loading'
+  const user = useUser();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (user !== undefined) {
+      setIsLoading(false);
+    }
+  }, [user]);
 
   return (
     <header className="bg-background/80 backdrop-blur-sm border-b sticky top-0 z-10">
@@ -76,7 +85,7 @@ export default function Header() {
         <div className="flex items-center space-x-2 sm:space-x-4">
           {isLoading ? (
             <div className="h-8 w-20 rounded-md bg-muted animate-pulse"></div>
-          ) : session?.user ? (
+          ) : user ? (
             <>
               <ThemeToggle />
               <SettingsMenu />
@@ -84,7 +93,9 @@ export default function Header() {
           ) : (
             <>
               <ThemeToggle />
-              <Button size="sm" onClick={() => signIn('github')}>Sign In</Button>
+              <Button size="sm" asChild>
+                <Link href="/login">Sign In</Link>
+              </Button>
             </>
           )}
         </div>
