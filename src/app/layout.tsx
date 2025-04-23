@@ -4,7 +4,6 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import SessionProvider from "@/components/auth/SessionProvider";
 import Header from "@/components/layout/Header";
-import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { LiveRegionProvider } from "@/context/LiveRegionContext";
 import SupabaseProvider from "@/components/providers/SupabaseProvider";
 
@@ -36,34 +35,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="dark" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} antialiased font-sans bg-background text-foreground`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <SupabaseProvider>
-            <SessionProvider>
-              <LiveRegionProvider>
-                <div className="flex flex-col min-h-screen">
-                  <Header />
-                  <main className="flex-grow">
-                    {children}
-                  </main>
-                </div>
-                <Toaster 
-                  richColors 
-                  position="bottom-center" 
-                  theme="system"
-                />
-              </LiveRegionProvider>
-            </SessionProvider>
-          </SupabaseProvider>
-        </ThemeProvider>
+        <SupabaseProvider>
+          <SessionProvider>
+            <LiveRegionProvider>
+              <div className="flex flex-col min-h-screen">
+                <Header />
+                <main className="flex-grow">
+                  {children}
+                </main>
+              </div>
+              <Toaster 
+                richColors 
+                position="bottom-center" 
+                theme="dark"
+              />
+            </LiveRegionProvider>
+          </SessionProvider>
+        </SupabaseProvider>
       </body>
     </html>
   );
