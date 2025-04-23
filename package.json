@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:seed": "ts-node scripts/seedSpiral.ts"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.0",
@@ -52,7 +53,7 @@
     "@eslint/eslintrc": "^3",
     "@next/bundle-analyzer": "^15.3.1",
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@types/node": "^20.17.30",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/react-tagcloud": "^2.3.2",
@@ -60,9 +61,14 @@
     "eslint-config-next": "15.3.1",
     "prisma": "^6.6.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3"
   },
   "overrides": {
     "react-is": "^19.1.0"
+  },
+  "prisma": {
+    "seed": "tsx --transpile-only ./scripts/seedSpiral.ts"
   }
 }

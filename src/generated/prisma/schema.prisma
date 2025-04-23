@@ -75,3 +75,24 @@ model CheckIn {
 
   @@index([userId])
 }
+
+/**
+ * ──────────── NEW TABLE FOR SPIRAL DYNAMICS REFERENCE DATA ────────────
+ */
+
+enum RefType {
+  STAGE
+  DILEMMA
+}
+
+model SpiralReference {
+  id          String  @id @default(cuid())
+  type        RefType
+  code        String  @unique // "BEIGE", "BLUE", "DILEMMA_01"
+  name        String // "SurvivalSense", "AuthorityStructures"
+  description String
+  details     Json? // For STAGE: { "tier":1, "order":0 } | For DILEMMA: { "choices":[...] }
+  colorHex    String? // #D0E0FF  (only for STAGE rows)
+
+  @@index([type, code])
+}

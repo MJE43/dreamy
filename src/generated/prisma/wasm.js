@@ -164,6 +164,16 @@ exports.Prisma.CheckInScalarFieldEnum = {
   notes: 'notes'
 };
 
+exports.Prisma.SpiralReferenceScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  code: 'code',
+  name: 'name',
+  description: 'description',
+  details: 'details',
+  colorHex: 'colorHex'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -193,14 +203,18 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-
+exports.RefType = exports.$Enums.RefType = {
+  STAGE: 'STAGE',
+  DILEMMA: 'DILEMMA'
+};
 
 exports.Prisma.ModelName = {
   Dream: 'Dream',
   Analysis: 'Analysis',
   SpiralProfile: 'SpiralProfile',
   Goal: 'Goal',
-  CheckIn: 'CheckIn'
+  CheckIn: 'CheckIn',
+  SpiralReference: 'SpiralReference'
 };
 
 /**

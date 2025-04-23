@@ -38,6 +38,28 @@ export type Goal = $Result.DefaultSelection<Prisma.$GoalPayload>
  * 
  */
 export type CheckIn = $Result.DefaultSelection<Prisma.$CheckInPayload>
+/**
+ * Model SpiralReference
+ * 
+ */
+export type SpiralReference = $Result.DefaultSelection<Prisma.$SpiralReferencePayload>
+
+/**
+ * Enums
+ */
+export namespace $Enums {
+  export const RefType: {
+  STAGE: 'STAGE',
+  DILEMMA: 'DILEMMA'
+};
+
+export type RefType = (typeof RefType)[keyof typeof RefType]
+
+}
+
+export type RefType = $Enums.RefType
+
+export const RefType: typeof $Enums.RefType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -213,6 +235,16 @@ export class PrismaClient<
     * ```
     */
   get checkIn(): Prisma.CheckInDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.spiralReference`: Exposes CRUD operations for the **SpiralReference** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SpiralReferences
+    * const spiralReferences = await prisma.spiralReference.findMany()
+    * ```
+    */
+  get spiralReference(): Prisma.SpiralReferenceDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -657,7 +689,8 @@ export namespace Prisma {
     Analysis: 'Analysis',
     SpiralProfile: 'SpiralProfile',
     Goal: 'Goal',
-    CheckIn: 'CheckIn'
+    CheckIn: 'CheckIn',
+    SpiralReference: 'SpiralReference'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -676,7 +709,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "dream" | "analysis" | "spiralProfile" | "goal" | "checkIn"
+      modelProps: "dream" | "analysis" | "spiralProfile" | "goal" | "checkIn" | "spiralReference"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1050,6 +1083,80 @@ export namespace Prisma {
           }
         }
       }
+      SpiralReference: {
+        payload: Prisma.$SpiralReferencePayload<ExtArgs>
+        fields: Prisma.SpiralReferenceFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SpiralReferenceFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SpiralReferencePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SpiralReferenceFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SpiralReferencePayload>
+          }
+          findFirst: {
+            args: Prisma.SpiralReferenceFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SpiralReferencePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SpiralReferenceFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SpiralReferencePayload>
+          }
+          findMany: {
+            args: Prisma.SpiralReferenceFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SpiralReferencePayload>[]
+          }
+          create: {
+            args: Prisma.SpiralReferenceCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SpiralReferencePayload>
+          }
+          createMany: {
+            args: Prisma.SpiralReferenceCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SpiralReferenceCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SpiralReferencePayload>[]
+          }
+          delete: {
+            args: Prisma.SpiralReferenceDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SpiralReferencePayload>
+          }
+          update: {
+            args: Prisma.SpiralReferenceUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SpiralReferencePayload>
+          }
+          deleteMany: {
+            args: Prisma.SpiralReferenceDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SpiralReferenceUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SpiralReferenceUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SpiralReferencePayload>[]
+          }
+          upsert: {
+            args: Prisma.SpiralReferenceUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SpiralReferencePayload>
+          }
+          aggregate: {
+            args: Prisma.SpiralReferenceAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSpiralReference>
+          }
+          groupBy: {
+            args: Prisma.SpiralReferenceGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SpiralReferenceGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SpiralReferenceCountArgs<ExtArgs>
+            result: $Utils.Optional<SpiralReferenceCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1139,6 +1246,7 @@ export namespace Prisma {
     spiralProfile?: SpiralProfileOmit
     goal?: GoalOmit
     checkIn?: CheckInOmit
+    spiralReference?: SpiralReferenceOmit
   }
 
   /* Types for Logging */
@@ -6487,6 +6595,1023 @@ export namespace Prisma {
 
 
   /**
+   * Model SpiralReference
+   */
+
+  export type AggregateSpiralReference = {
+    _count: SpiralReferenceCountAggregateOutputType | null
+    _min: SpiralReferenceMinAggregateOutputType | null
+    _max: SpiralReferenceMaxAggregateOutputType | null
+  }
+
+  export type SpiralReferenceMinAggregateOutputType = {
+    id: string | null
+    type: $Enums.RefType | null
+    code: string | null
+    name: string | null
+    description: string | null
+    colorHex: string | null
+  }
+
+  export type SpiralReferenceMaxAggregateOutputType = {
+    id: string | null
+    type: $Enums.RefType | null
+    code: string | null
+    name: string | null
+    description: string | null
+    colorHex: string | null
+  }
+
+  export type SpiralReferenceCountAggregateOutputType = {
+    id: number
+    type: number
+    code: number
+    name: number
+    description: number
+    details: number
+    colorHex: number
+    _all: number
+  }
+
+
+  export type SpiralReferenceMinAggregateInputType = {
+    id?: true
+    type?: true
+    code?: true
+    name?: true
+    description?: true
+    colorHex?: true
+  }
+
+  export type SpiralReferenceMaxAggregateInputType = {
+    id?: true
+    type?: true
+    code?: true
+    name?: true
+    description?: true
+    colorHex?: true
+  }
+
+  export type SpiralReferenceCountAggregateInputType = {
+    id?: true
+    type?: true
+    code?: true
+    name?: true
+    description?: true
+    details?: true
+    colorHex?: true
+    _all?: true
+  }
+
+  export type SpiralReferenceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SpiralReference to aggregate.
+     */
+    where?: SpiralReferenceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SpiralReferences to fetch.
+     */
+    orderBy?: SpiralReferenceOrderByWithRelationInput | SpiralReferenceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SpiralReferenceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SpiralReferences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SpiralReferences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SpiralReferences
+    **/
+    _count?: true | SpiralReferenceCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SpiralReferenceMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SpiralReferenceMaxAggregateInputType
+  }
+
+  export type GetSpiralReferenceAggregateType<T extends SpiralReferenceAggregateArgs> = {
+        [P in keyof T & keyof AggregateSpiralReference]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSpiralReference[P]>
+      : GetScalarType<T[P], AggregateSpiralReference[P]>
+  }
+
+
+
+
+  export type SpiralReferenceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SpiralReferenceWhereInput
+    orderBy?: SpiralReferenceOrderByWithAggregationInput | SpiralReferenceOrderByWithAggregationInput[]
+    by: SpiralReferenceScalarFieldEnum[] | SpiralReferenceScalarFieldEnum
+    having?: SpiralReferenceScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SpiralReferenceCountAggregateInputType | true
+    _min?: SpiralReferenceMinAggregateInputType
+    _max?: SpiralReferenceMaxAggregateInputType
+  }
+
+  export type SpiralReferenceGroupByOutputType = {
+    id: string
+    type: $Enums.RefType
+    code: string
+    name: string
+    description: string
+    details: JsonValue | null
+    colorHex: string | null
+    _count: SpiralReferenceCountAggregateOutputType | null
+    _min: SpiralReferenceMinAggregateOutputType | null
+    _max: SpiralReferenceMaxAggregateOutputType | null
+  }
+
+  type GetSpiralReferenceGroupByPayload<T extends SpiralReferenceGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SpiralReferenceGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SpiralReferenceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SpiralReferenceGroupByOutputType[P]>
+            : GetScalarType<T[P], SpiralReferenceGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SpiralReferenceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    type?: boolean
+    code?: boolean
+    name?: boolean
+    description?: boolean
+    details?: boolean
+    colorHex?: boolean
+  }, ExtArgs["result"]["spiralReference"]>
+
+  export type SpiralReferenceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    type?: boolean
+    code?: boolean
+    name?: boolean
+    description?: boolean
+    details?: boolean
+    colorHex?: boolean
+  }, ExtArgs["result"]["spiralReference"]>
+
+  export type SpiralReferenceSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    type?: boolean
+    code?: boolean
+    name?: boolean
+    description?: boolean
+    details?: boolean
+    colorHex?: boolean
+  }, ExtArgs["result"]["spiralReference"]>
+
+  export type SpiralReferenceSelectScalar = {
+    id?: boolean
+    type?: boolean
+    code?: boolean
+    name?: boolean
+    description?: boolean
+    details?: boolean
+    colorHex?: boolean
+  }
+
+  export type SpiralReferenceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "type" | "code" | "name" | "description" | "details" | "colorHex", ExtArgs["result"]["spiralReference"]>
+
+  export type $SpiralReferencePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SpiralReference"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      type: $Enums.RefType
+      code: string
+      name: string
+      description: string
+      details: Prisma.JsonValue | null
+      colorHex: string | null
+    }, ExtArgs["result"]["spiralReference"]>
+    composites: {}
+  }
+
+  type SpiralReferenceGetPayload<S extends boolean | null | undefined | SpiralReferenceDefaultArgs> = $Result.GetResult<Prisma.$SpiralReferencePayload, S>
+
+  type SpiralReferenceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SpiralReferenceFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SpiralReferenceCountAggregateInputType | true
+    }
+
+  export interface SpiralReferenceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SpiralReference'], meta: { name: 'SpiralReference' } }
+    /**
+     * Find zero or one SpiralReference that matches the filter.
+     * @param {SpiralReferenceFindUniqueArgs} args - Arguments to find a SpiralReference
+     * @example
+     * // Get one SpiralReference
+     * const spiralReference = await prisma.spiralReference.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SpiralReferenceFindUniqueArgs>(args: SelectSubset<T, SpiralReferenceFindUniqueArgs<ExtArgs>>): Prisma__SpiralReferenceClient<$Result.GetResult<Prisma.$SpiralReferencePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SpiralReference that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SpiralReferenceFindUniqueOrThrowArgs} args - Arguments to find a SpiralReference
+     * @example
+     * // Get one SpiralReference
+     * const spiralReference = await prisma.spiralReference.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SpiralReferenceFindUniqueOrThrowArgs>(args: SelectSubset<T, SpiralReferenceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SpiralReferenceClient<$Result.GetResult<Prisma.$SpiralReferencePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SpiralReference that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SpiralReferenceFindFirstArgs} args - Arguments to find a SpiralReference
+     * @example
+     * // Get one SpiralReference
+     * const spiralReference = await prisma.spiralReference.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SpiralReferenceFindFirstArgs>(args?: SelectSubset<T, SpiralReferenceFindFirstArgs<ExtArgs>>): Prisma__SpiralReferenceClient<$Result.GetResult<Prisma.$SpiralReferencePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SpiralReference that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SpiralReferenceFindFirstOrThrowArgs} args - Arguments to find a SpiralReference
+     * @example
+     * // Get one SpiralReference
+     * const spiralReference = await prisma.spiralReference.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SpiralReferenceFindFirstOrThrowArgs>(args?: SelectSubset<T, SpiralReferenceFindFirstOrThrowArgs<ExtArgs>>): Prisma__SpiralReferenceClient<$Result.GetResult<Prisma.$SpiralReferencePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SpiralReferences that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SpiralReferenceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SpiralReferences
+     * const spiralReferences = await prisma.spiralReference.findMany()
+     * 
+     * // Get first 10 SpiralReferences
+     * const spiralReferences = await prisma.spiralReference.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const spiralReferenceWithIdOnly = await prisma.spiralReference.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SpiralReferenceFindManyArgs>(args?: SelectSubset<T, SpiralReferenceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SpiralReferencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SpiralReference.
+     * @param {SpiralReferenceCreateArgs} args - Arguments to create a SpiralReference.
+     * @example
+     * // Create one SpiralReference
+     * const SpiralReference = await prisma.spiralReference.create({
+     *   data: {
+     *     // ... data to create a SpiralReference
+     *   }
+     * })
+     * 
+     */
+    create<T extends SpiralReferenceCreateArgs>(args: SelectSubset<T, SpiralReferenceCreateArgs<ExtArgs>>): Prisma__SpiralReferenceClient<$Result.GetResult<Prisma.$SpiralReferencePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SpiralReferences.
+     * @param {SpiralReferenceCreateManyArgs} args - Arguments to create many SpiralReferences.
+     * @example
+     * // Create many SpiralReferences
+     * const spiralReference = await prisma.spiralReference.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SpiralReferenceCreateManyArgs>(args?: SelectSubset<T, SpiralReferenceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SpiralReferences and returns the data saved in the database.
+     * @param {SpiralReferenceCreateManyAndReturnArgs} args - Arguments to create many SpiralReferences.
+     * @example
+     * // Create many SpiralReferences
+     * const spiralReference = await prisma.spiralReference.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SpiralReferences and only return the `id`
+     * const spiralReferenceWithIdOnly = await prisma.spiralReference.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SpiralReferenceCreateManyAndReturnArgs>(args?: SelectSubset<T, SpiralReferenceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SpiralReferencePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SpiralReference.
+     * @param {SpiralReferenceDeleteArgs} args - Arguments to delete one SpiralReference.
+     * @example
+     * // Delete one SpiralReference
+     * const SpiralReference = await prisma.spiralReference.delete({
+     *   where: {
+     *     // ... filter to delete one SpiralReference
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SpiralReferenceDeleteArgs>(args: SelectSubset<T, SpiralReferenceDeleteArgs<ExtArgs>>): Prisma__SpiralReferenceClient<$Result.GetResult<Prisma.$SpiralReferencePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SpiralReference.
+     * @param {SpiralReferenceUpdateArgs} args - Arguments to update one SpiralReference.
+     * @example
+     * // Update one SpiralReference
+     * const spiralReference = await prisma.spiralReference.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SpiralReferenceUpdateArgs>(args: SelectSubset<T, SpiralReferenceUpdateArgs<ExtArgs>>): Prisma__SpiralReferenceClient<$Result.GetResult<Prisma.$SpiralReferencePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SpiralReferences.
+     * @param {SpiralReferenceDeleteManyArgs} args - Arguments to filter SpiralReferences to delete.
+     * @example
+     * // Delete a few SpiralReferences
+     * const { count } = await prisma.spiralReference.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SpiralReferenceDeleteManyArgs>(args?: SelectSubset<T, SpiralReferenceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SpiralReferences.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SpiralReferenceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SpiralReferences
+     * const spiralReference = await prisma.spiralReference.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SpiralReferenceUpdateManyArgs>(args: SelectSubset<T, SpiralReferenceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SpiralReferences and returns the data updated in the database.
+     * @param {SpiralReferenceUpdateManyAndReturnArgs} args - Arguments to update many SpiralReferences.
+     * @example
+     * // Update many SpiralReferences
+     * const spiralReference = await prisma.spiralReference.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SpiralReferences and only return the `id`
+     * const spiralReferenceWithIdOnly = await prisma.spiralReference.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SpiralReferenceUpdateManyAndReturnArgs>(args: SelectSubset<T, SpiralReferenceUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SpiralReferencePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SpiralReference.
+     * @param {SpiralReferenceUpsertArgs} args - Arguments to update or create a SpiralReference.
+     * @example
+     * // Update or create a SpiralReference
+     * const spiralReference = await prisma.spiralReference.upsert({
+     *   create: {
+     *     // ... data to create a SpiralReference
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SpiralReference we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SpiralReferenceUpsertArgs>(args: SelectSubset<T, SpiralReferenceUpsertArgs<ExtArgs>>): Prisma__SpiralReferenceClient<$Result.GetResult<Prisma.$SpiralReferencePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SpiralReferences.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SpiralReferenceCountArgs} args - Arguments to filter SpiralReferences to count.
+     * @example
+     * // Count the number of SpiralReferences
+     * const count = await prisma.spiralReference.count({
+     *   where: {
+     *     // ... the filter for the SpiralReferences we want to count
+     *   }
+     * })
+    **/
+    count<T extends SpiralReferenceCountArgs>(
+      args?: Subset<T, SpiralReferenceCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SpiralReferenceCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SpiralReference.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SpiralReferenceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SpiralReferenceAggregateArgs>(args: Subset<T, SpiralReferenceAggregateArgs>): Prisma.PrismaPromise<GetSpiralReferenceAggregateType<T>>
+
+    /**
+     * Group by SpiralReference.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SpiralReferenceGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SpiralReferenceGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SpiralReferenceGroupByArgs['orderBy'] }
+        : { orderBy?: SpiralReferenceGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SpiralReferenceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSpiralReferenceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SpiralReference model
+   */
+  readonly fields: SpiralReferenceFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SpiralReference.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SpiralReferenceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SpiralReference model
+   */
+  interface SpiralReferenceFieldRefs {
+    readonly id: FieldRef<"SpiralReference", 'String'>
+    readonly type: FieldRef<"SpiralReference", 'RefType'>
+    readonly code: FieldRef<"SpiralReference", 'String'>
+    readonly name: FieldRef<"SpiralReference", 'String'>
+    readonly description: FieldRef<"SpiralReference", 'String'>
+    readonly details: FieldRef<"SpiralReference", 'Json'>
+    readonly colorHex: FieldRef<"SpiralReference", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SpiralReference findUnique
+   */
+  export type SpiralReferenceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SpiralReference
+     */
+    select?: SpiralReferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SpiralReference
+     */
+    omit?: SpiralReferenceOmit<ExtArgs> | null
+    /**
+     * Filter, which SpiralReference to fetch.
+     */
+    where: SpiralReferenceWhereUniqueInput
+  }
+
+  /**
+   * SpiralReference findUniqueOrThrow
+   */
+  export type SpiralReferenceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SpiralReference
+     */
+    select?: SpiralReferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SpiralReference
+     */
+    omit?: SpiralReferenceOmit<ExtArgs> | null
+    /**
+     * Filter, which SpiralReference to fetch.
+     */
+    where: SpiralReferenceWhereUniqueInput
+  }
+
+  /**
+   * SpiralReference findFirst
+   */
+  export type SpiralReferenceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SpiralReference
+     */
+    select?: SpiralReferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SpiralReference
+     */
+    omit?: SpiralReferenceOmit<ExtArgs> | null
+    /**
+     * Filter, which SpiralReference to fetch.
+     */
+    where?: SpiralReferenceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SpiralReferences to fetch.
+     */
+    orderBy?: SpiralReferenceOrderByWithRelationInput | SpiralReferenceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SpiralReferences.
+     */
+    cursor?: SpiralReferenceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SpiralReferences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SpiralReferences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SpiralReferences.
+     */
+    distinct?: SpiralReferenceScalarFieldEnum | SpiralReferenceScalarFieldEnum[]
+  }
+
+  /**
+   * SpiralReference findFirstOrThrow
+   */
+  export type SpiralReferenceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SpiralReference
+     */
+    select?: SpiralReferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SpiralReference
+     */
+    omit?: SpiralReferenceOmit<ExtArgs> | null
+    /**
+     * Filter, which SpiralReference to fetch.
+     */
+    where?: SpiralReferenceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SpiralReferences to fetch.
+     */
+    orderBy?: SpiralReferenceOrderByWithRelationInput | SpiralReferenceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SpiralReferences.
+     */
+    cursor?: SpiralReferenceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SpiralReferences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SpiralReferences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SpiralReferences.
+     */
+    distinct?: SpiralReferenceScalarFieldEnum | SpiralReferenceScalarFieldEnum[]
+  }
+
+  /**
+   * SpiralReference findMany
+   */
+  export type SpiralReferenceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SpiralReference
+     */
+    select?: SpiralReferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SpiralReference
+     */
+    omit?: SpiralReferenceOmit<ExtArgs> | null
+    /**
+     * Filter, which SpiralReferences to fetch.
+     */
+    where?: SpiralReferenceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SpiralReferences to fetch.
+     */
+    orderBy?: SpiralReferenceOrderByWithRelationInput | SpiralReferenceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SpiralReferences.
+     */
+    cursor?: SpiralReferenceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SpiralReferences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SpiralReferences.
+     */
+    skip?: number
+    distinct?: SpiralReferenceScalarFieldEnum | SpiralReferenceScalarFieldEnum[]
+  }
+
+  /**
+   * SpiralReference create
+   */
+  export type SpiralReferenceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SpiralReference
+     */
+    select?: SpiralReferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SpiralReference
+     */
+    omit?: SpiralReferenceOmit<ExtArgs> | null
+    /**
+     * The data needed to create a SpiralReference.
+     */
+    data: XOR<SpiralReferenceCreateInput, SpiralReferenceUncheckedCreateInput>
+  }
+
+  /**
+   * SpiralReference createMany
+   */
+  export type SpiralReferenceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SpiralReferences.
+     */
+    data: SpiralReferenceCreateManyInput | SpiralReferenceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SpiralReference createManyAndReturn
+   */
+  export type SpiralReferenceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SpiralReference
+     */
+    select?: SpiralReferenceSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SpiralReference
+     */
+    omit?: SpiralReferenceOmit<ExtArgs> | null
+    /**
+     * The data used to create many SpiralReferences.
+     */
+    data: SpiralReferenceCreateManyInput | SpiralReferenceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SpiralReference update
+   */
+  export type SpiralReferenceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SpiralReference
+     */
+    select?: SpiralReferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SpiralReference
+     */
+    omit?: SpiralReferenceOmit<ExtArgs> | null
+    /**
+     * The data needed to update a SpiralReference.
+     */
+    data: XOR<SpiralReferenceUpdateInput, SpiralReferenceUncheckedUpdateInput>
+    /**
+     * Choose, which SpiralReference to update.
+     */
+    where: SpiralReferenceWhereUniqueInput
+  }
+
+  /**
+   * SpiralReference updateMany
+   */
+  export type SpiralReferenceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SpiralReferences.
+     */
+    data: XOR<SpiralReferenceUpdateManyMutationInput, SpiralReferenceUncheckedUpdateManyInput>
+    /**
+     * Filter which SpiralReferences to update
+     */
+    where?: SpiralReferenceWhereInput
+    /**
+     * Limit how many SpiralReferences to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SpiralReference updateManyAndReturn
+   */
+  export type SpiralReferenceUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SpiralReference
+     */
+    select?: SpiralReferenceSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SpiralReference
+     */
+    omit?: SpiralReferenceOmit<ExtArgs> | null
+    /**
+     * The data used to update SpiralReferences.
+     */
+    data: XOR<SpiralReferenceUpdateManyMutationInput, SpiralReferenceUncheckedUpdateManyInput>
+    /**
+     * Filter which SpiralReferences to update
+     */
+    where?: SpiralReferenceWhereInput
+    /**
+     * Limit how many SpiralReferences to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SpiralReference upsert
+   */
+  export type SpiralReferenceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SpiralReference
+     */
+    select?: SpiralReferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SpiralReference
+     */
+    omit?: SpiralReferenceOmit<ExtArgs> | null
+    /**
+     * The filter to search for the SpiralReference to update in case it exists.
+     */
+    where: SpiralReferenceWhereUniqueInput
+    /**
+     * In case the SpiralReference found by the `where` argument doesn't exist, create a new SpiralReference with this data.
+     */
+    create: XOR<SpiralReferenceCreateInput, SpiralReferenceUncheckedCreateInput>
+    /**
+     * In case the SpiralReference was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SpiralReferenceUpdateInput, SpiralReferenceUncheckedUpdateInput>
+  }
+
+  /**
+   * SpiralReference delete
+   */
+  export type SpiralReferenceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SpiralReference
+     */
+    select?: SpiralReferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SpiralReference
+     */
+    omit?: SpiralReferenceOmit<ExtArgs> | null
+    /**
+     * Filter which SpiralReference to delete.
+     */
+    where: SpiralReferenceWhereUniqueInput
+  }
+
+  /**
+   * SpiralReference deleteMany
+   */
+  export type SpiralReferenceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SpiralReferences to delete
+     */
+    where?: SpiralReferenceWhereInput
+    /**
+     * Limit how many SpiralReferences to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SpiralReference without action
+   */
+  export type SpiralReferenceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SpiralReference
+     */
+    select?: SpiralReferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SpiralReference
+     */
+    omit?: SpiralReferenceOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -6560,6 +7685,19 @@ export namespace Prisma {
   };
 
   export type CheckInScalarFieldEnum = (typeof CheckInScalarFieldEnum)[keyof typeof CheckInScalarFieldEnum]
+
+
+  export const SpiralReferenceScalarFieldEnum: {
+    id: 'id',
+    type: 'type',
+    code: 'code',
+    name: 'name',
+    description: 'description',
+    details: 'details',
+    colorHex: 'colorHex'
+  };
+
+  export type SpiralReferenceScalarFieldEnum = (typeof SpiralReferenceScalarFieldEnum)[keyof typeof SpiralReferenceScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -6675,6 +7813,20 @@ export namespace Prisma {
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
+   * Reference to a field of type 'RefType'
+   */
+  export type EnumRefTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RefType'>
+    
+
+
+  /**
+   * Reference to a field of type 'RefType[]'
+   */
+  export type ListEnumRefTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RefType[]'>
     
 
 
@@ -6998,6 +8150,68 @@ export namespace Prisma {
     mood?: IntWithAggregatesFilter<"CheckIn"> | number
     stressLevel?: IntNullableWithAggregatesFilter<"CheckIn"> | number | null
     notes?: StringNullableWithAggregatesFilter<"CheckIn"> | string | null
+  }
+
+  export type SpiralReferenceWhereInput = {
+    AND?: SpiralReferenceWhereInput | SpiralReferenceWhereInput[]
+    OR?: SpiralReferenceWhereInput[]
+    NOT?: SpiralReferenceWhereInput | SpiralReferenceWhereInput[]
+    id?: StringFilter<"SpiralReference"> | string
+    type?: EnumRefTypeFilter<"SpiralReference"> | $Enums.RefType
+    code?: StringFilter<"SpiralReference"> | string
+    name?: StringFilter<"SpiralReference"> | string
+    description?: StringFilter<"SpiralReference"> | string
+    details?: JsonNullableFilter<"SpiralReference">
+    colorHex?: StringNullableFilter<"SpiralReference"> | string | null
+  }
+
+  export type SpiralReferenceOrderByWithRelationInput = {
+    id?: SortOrder
+    type?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    details?: SortOrderInput | SortOrder
+    colorHex?: SortOrderInput | SortOrder
+  }
+
+  export type SpiralReferenceWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    code?: string
+    AND?: SpiralReferenceWhereInput | SpiralReferenceWhereInput[]
+    OR?: SpiralReferenceWhereInput[]
+    NOT?: SpiralReferenceWhereInput | SpiralReferenceWhereInput[]
+    type?: EnumRefTypeFilter<"SpiralReference"> | $Enums.RefType
+    name?: StringFilter<"SpiralReference"> | string
+    description?: StringFilter<"SpiralReference"> | string
+    details?: JsonNullableFilter<"SpiralReference">
+    colorHex?: StringNullableFilter<"SpiralReference"> | string | null
+  }, "id" | "code">
+
+  export type SpiralReferenceOrderByWithAggregationInput = {
+    id?: SortOrder
+    type?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    details?: SortOrderInput | SortOrder
+    colorHex?: SortOrderInput | SortOrder
+    _count?: SpiralReferenceCountOrderByAggregateInput
+    _max?: SpiralReferenceMaxOrderByAggregateInput
+    _min?: SpiralReferenceMinOrderByAggregateInput
+  }
+
+  export type SpiralReferenceScalarWhereWithAggregatesInput = {
+    AND?: SpiralReferenceScalarWhereWithAggregatesInput | SpiralReferenceScalarWhereWithAggregatesInput[]
+    OR?: SpiralReferenceScalarWhereWithAggregatesInput[]
+    NOT?: SpiralReferenceScalarWhereWithAggregatesInput | SpiralReferenceScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SpiralReference"> | string
+    type?: EnumRefTypeWithAggregatesFilter<"SpiralReference"> | $Enums.RefType
+    code?: StringWithAggregatesFilter<"SpiralReference"> | string
+    name?: StringWithAggregatesFilter<"SpiralReference"> | string
+    description?: StringWithAggregatesFilter<"SpiralReference"> | string
+    details?: JsonNullableWithAggregatesFilter<"SpiralReference">
+    colorHex?: StringNullableWithAggregatesFilter<"SpiralReference"> | string | null
   }
 
   export type DreamCreateInput = {
@@ -7330,6 +8544,76 @@ export namespace Prisma {
     mood?: IntFieldUpdateOperationsInput | number
     stressLevel?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type SpiralReferenceCreateInput = {
+    id?: string
+    type: $Enums.RefType
+    code: string
+    name: string
+    description: string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    colorHex?: string | null
+  }
+
+  export type SpiralReferenceUncheckedCreateInput = {
+    id?: string
+    type: $Enums.RefType
+    code: string
+    name: string
+    description: string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    colorHex?: string | null
+  }
+
+  export type SpiralReferenceUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumRefTypeFieldUpdateOperationsInput | $Enums.RefType
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    colorHex?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type SpiralReferenceUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumRefTypeFieldUpdateOperationsInput | $Enums.RefType
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    colorHex?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type SpiralReferenceCreateManyInput = {
+    id?: string
+    type: $Enums.RefType
+    code: string
+    name: string
+    description: string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    colorHex?: string | null
+  }
+
+  export type SpiralReferenceUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumRefTypeFieldUpdateOperationsInput | $Enums.RefType
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    colorHex?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type SpiralReferenceUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumRefTypeFieldUpdateOperationsInput | $Enums.RefType
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    colorHex?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -7787,6 +9071,51 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
+  export type EnumRefTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.RefType | EnumRefTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.RefType[] | ListEnumRefTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RefType[] | ListEnumRefTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumRefTypeFilter<$PrismaModel> | $Enums.RefType
+  }
+
+  export type SpiralReferenceCountOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    details?: SortOrder
+    colorHex?: SortOrder
+  }
+
+  export type SpiralReferenceMaxOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    colorHex?: SortOrder
+  }
+
+  export type SpiralReferenceMinOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    colorHex?: SortOrder
+  }
+
+  export type EnumRefTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RefType | EnumRefTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.RefType[] | ListEnumRefTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RefType[] | ListEnumRefTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumRefTypeWithAggregatesFilter<$PrismaModel> | $Enums.RefType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRefTypeFilter<$PrismaModel>
+    _max?: NestedEnumRefTypeFilter<$PrismaModel>
+  }
+
   export type DreamCreatetagsInput = {
     set: string[]
   }
@@ -7876,6 +9205,10 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type EnumRefTypeFieldUpdateOperationsInput = {
+    set?: $Enums.RefType
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -8123,6 +9456,23 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedEnumRefTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.RefType | EnumRefTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.RefType[] | ListEnumRefTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RefType[] | ListEnumRefTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumRefTypeFilter<$PrismaModel> | $Enums.RefType
+  }
+
+  export type NestedEnumRefTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RefType | EnumRefTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.RefType[] | ListEnumRefTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RefType[] | ListEnumRefTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumRefTypeWithAggregatesFilter<$PrismaModel> | $Enums.RefType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRefTypeFilter<$PrismaModel>
+    _max?: NestedEnumRefTypeFilter<$PrismaModel>
   }
 
   export type AnalysisCreateWithoutDreamInput = {
