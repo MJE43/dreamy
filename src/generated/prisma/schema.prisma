@@ -42,11 +42,13 @@ model Analysis {
  */
 
 model SpiralProfile {
-  id           String   @id @default(cuid())
-  createdAt    DateTime @default(now())
-  userId       String // Supabase Auth UUID
-  stageBlend   Json // e.g. {"green":0.6,"orange":0.3,"yellow":0.1}
-  dominantBias String? // optional narrative tag
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  userId        String // Supabase Auth UUID
+  stageBlend    Json? // e.g. {"green":0.6,"orange":0.3,"yellow":0.1} - Classifier output
+  dominantBias  String? // optional narrative tag
+  rawAnswers    Json? // Dilemma answers: [{ "code": "DILEMMA_01", "choice": "A" }, ...]
+  includeDreams Boolean? // User opted to include dreams in initial analysis
 
   @@index([userId])
 }

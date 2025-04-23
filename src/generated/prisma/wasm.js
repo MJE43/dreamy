@@ -140,7 +140,9 @@ exports.Prisma.SpiralProfileScalarFieldEnum = {
   createdAt: 'createdAt',
   userId: 'userId',
   stageBlend: 'stageBlend',
-  dominantBias: 'dominantBias'
+  dominantBias: 'dominantBias',
+  rawAnswers: 'rawAnswers',
+  includeDreams: 'includeDreams'
 };
 
 exports.Prisma.GoalScalarFieldEnum = {
@@ -179,12 +181,12 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
-exports.Prisma.JsonNullValueInput = {
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull
 };
 
-exports.Prisma.NullableJsonNullValueInput = {
-  DbNull: Prisma.DbNull,
+exports.Prisma.JsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 

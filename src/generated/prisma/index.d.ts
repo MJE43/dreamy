@@ -3533,6 +3533,7 @@ export namespace Prisma {
     createdAt: Date | null
     userId: string | null
     dominantBias: string | null
+    includeDreams: boolean | null
   }
 
   export type SpiralProfileMaxAggregateOutputType = {
@@ -3540,6 +3541,7 @@ export namespace Prisma {
     createdAt: Date | null
     userId: string | null
     dominantBias: string | null
+    includeDreams: boolean | null
   }
 
   export type SpiralProfileCountAggregateOutputType = {
@@ -3548,6 +3550,8 @@ export namespace Prisma {
     userId: number
     stageBlend: number
     dominantBias: number
+    rawAnswers: number
+    includeDreams: number
     _all: number
   }
 
@@ -3557,6 +3561,7 @@ export namespace Prisma {
     createdAt?: true
     userId?: true
     dominantBias?: true
+    includeDreams?: true
   }
 
   export type SpiralProfileMaxAggregateInputType = {
@@ -3564,6 +3569,7 @@ export namespace Prisma {
     createdAt?: true
     userId?: true
     dominantBias?: true
+    includeDreams?: true
   }
 
   export type SpiralProfileCountAggregateInputType = {
@@ -3572,6 +3578,8 @@ export namespace Prisma {
     userId?: true
     stageBlend?: true
     dominantBias?: true
+    rawAnswers?: true
+    includeDreams?: true
     _all?: true
   }
 
@@ -3651,8 +3659,10 @@ export namespace Prisma {
     id: string
     createdAt: Date
     userId: string
-    stageBlend: JsonValue
+    stageBlend: JsonValue | null
     dominantBias: string | null
+    rawAnswers: JsonValue | null
+    includeDreams: boolean | null
     _count: SpiralProfileCountAggregateOutputType | null
     _min: SpiralProfileMinAggregateOutputType | null
     _max: SpiralProfileMaxAggregateOutputType | null
@@ -3678,6 +3688,8 @@ export namespace Prisma {
     userId?: boolean
     stageBlend?: boolean
     dominantBias?: boolean
+    rawAnswers?: boolean
+    includeDreams?: boolean
   }, ExtArgs["result"]["spiralProfile"]>
 
   export type SpiralProfileSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3686,6 +3698,8 @@ export namespace Prisma {
     userId?: boolean
     stageBlend?: boolean
     dominantBias?: boolean
+    rawAnswers?: boolean
+    includeDreams?: boolean
   }, ExtArgs["result"]["spiralProfile"]>
 
   export type SpiralProfileSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3694,6 +3708,8 @@ export namespace Prisma {
     userId?: boolean
     stageBlend?: boolean
     dominantBias?: boolean
+    rawAnswers?: boolean
+    includeDreams?: boolean
   }, ExtArgs["result"]["spiralProfile"]>
 
   export type SpiralProfileSelectScalar = {
@@ -3702,9 +3718,11 @@ export namespace Prisma {
     userId?: boolean
     stageBlend?: boolean
     dominantBias?: boolean
+    rawAnswers?: boolean
+    includeDreams?: boolean
   }
 
-  export type SpiralProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "userId" | "stageBlend" | "dominantBias", ExtArgs["result"]["spiralProfile"]>
+  export type SpiralProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "userId" | "stageBlend" | "dominantBias" | "rawAnswers" | "includeDreams", ExtArgs["result"]["spiralProfile"]>
 
   export type $SpiralProfilePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SpiralProfile"
@@ -3713,8 +3731,10 @@ export namespace Prisma {
       id: string
       createdAt: Date
       userId: string
-      stageBlend: Prisma.JsonValue
+      stageBlend: Prisma.JsonValue | null
       dominantBias: string | null
+      rawAnswers: Prisma.JsonValue | null
+      includeDreams: boolean | null
     }, ExtArgs["result"]["spiralProfile"]>
     composites: {}
   }
@@ -4143,6 +4163,8 @@ export namespace Prisma {
     readonly userId: FieldRef<"SpiralProfile", 'String'>
     readonly stageBlend: FieldRef<"SpiralProfile", 'Json'>
     readonly dominantBias: FieldRef<"SpiralProfile", 'String'>
+    readonly rawAnswers: FieldRef<"SpiralProfile", 'Json'>
+    readonly includeDreams: FieldRef<"SpiralProfile", 'Boolean'>
   }
     
 
@@ -7654,7 +7676,9 @@ export namespace Prisma {
     createdAt: 'createdAt',
     userId: 'userId',
     stageBlend: 'stageBlend',
-    dominantBias: 'dominantBias'
+    dominantBias: 'dominantBias',
+    rawAnswers: 'rawAnswers',
+    includeDreams: 'includeDreams'
   };
 
   export type SpiralProfileScalarFieldEnum = (typeof SpiralProfileScalarFieldEnum)[keyof typeof SpiralProfileScalarFieldEnum]
@@ -7708,19 +7732,19 @@ export namespace Prisma {
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
-  export const JsonNullValueInput: {
-    JsonNull: typeof JsonNull
-  };
-
-  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
-
-
   export const NullableJsonNullValueInput: {
     DbNull: typeof DbNull,
     JsonNull: typeof JsonNull
   };
 
   export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+  export const JsonNullValueInput: {
+    JsonNull: typeof JsonNull
+  };
+
+  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
   export const QueryMode: {
@@ -7976,16 +8000,20 @@ export namespace Prisma {
     id?: StringFilter<"SpiralProfile"> | string
     createdAt?: DateTimeFilter<"SpiralProfile"> | Date | string
     userId?: StringFilter<"SpiralProfile"> | string
-    stageBlend?: JsonFilter<"SpiralProfile">
+    stageBlend?: JsonNullableFilter<"SpiralProfile">
     dominantBias?: StringNullableFilter<"SpiralProfile"> | string | null
+    rawAnswers?: JsonNullableFilter<"SpiralProfile">
+    includeDreams?: BoolNullableFilter<"SpiralProfile"> | boolean | null
   }
 
   export type SpiralProfileOrderByWithRelationInput = {
     id?: SortOrder
     createdAt?: SortOrder
     userId?: SortOrder
-    stageBlend?: SortOrder
+    stageBlend?: SortOrderInput | SortOrder
     dominantBias?: SortOrderInput | SortOrder
+    rawAnswers?: SortOrderInput | SortOrder
+    includeDreams?: SortOrderInput | SortOrder
   }
 
   export type SpiralProfileWhereUniqueInput = Prisma.AtLeast<{
@@ -7995,16 +8023,20 @@ export namespace Prisma {
     NOT?: SpiralProfileWhereInput | SpiralProfileWhereInput[]
     createdAt?: DateTimeFilter<"SpiralProfile"> | Date | string
     userId?: StringFilter<"SpiralProfile"> | string
-    stageBlend?: JsonFilter<"SpiralProfile">
+    stageBlend?: JsonNullableFilter<"SpiralProfile">
     dominantBias?: StringNullableFilter<"SpiralProfile"> | string | null
+    rawAnswers?: JsonNullableFilter<"SpiralProfile">
+    includeDreams?: BoolNullableFilter<"SpiralProfile"> | boolean | null
   }, "id">
 
   export type SpiralProfileOrderByWithAggregationInput = {
     id?: SortOrder
     createdAt?: SortOrder
     userId?: SortOrder
-    stageBlend?: SortOrder
+    stageBlend?: SortOrderInput | SortOrder
     dominantBias?: SortOrderInput | SortOrder
+    rawAnswers?: SortOrderInput | SortOrder
+    includeDreams?: SortOrderInput | SortOrder
     _count?: SpiralProfileCountOrderByAggregateInput
     _max?: SpiralProfileMaxOrderByAggregateInput
     _min?: SpiralProfileMinOrderByAggregateInput
@@ -8017,8 +8049,10 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"SpiralProfile"> | string
     createdAt?: DateTimeWithAggregatesFilter<"SpiralProfile"> | Date | string
     userId?: StringWithAggregatesFilter<"SpiralProfile"> | string
-    stageBlend?: JsonWithAggregatesFilter<"SpiralProfile">
+    stageBlend?: JsonNullableWithAggregatesFilter<"SpiralProfile">
     dominantBias?: StringNullableWithAggregatesFilter<"SpiralProfile"> | string | null
+    rawAnswers?: JsonNullableWithAggregatesFilter<"SpiralProfile">
+    includeDreams?: BoolNullableWithAggregatesFilter<"SpiralProfile"> | boolean | null
   }
 
   export type GoalWhereInput = {
@@ -8347,56 +8381,70 @@ export namespace Prisma {
     id?: string
     createdAt?: Date | string
     userId: string
-    stageBlend: JsonNullValueInput | InputJsonValue
+    stageBlend?: NullableJsonNullValueInput | InputJsonValue
     dominantBias?: string | null
+    rawAnswers?: NullableJsonNullValueInput | InputJsonValue
+    includeDreams?: boolean | null
   }
 
   export type SpiralProfileUncheckedCreateInput = {
     id?: string
     createdAt?: Date | string
     userId: string
-    stageBlend: JsonNullValueInput | InputJsonValue
+    stageBlend?: NullableJsonNullValueInput | InputJsonValue
     dominantBias?: string | null
+    rawAnswers?: NullableJsonNullValueInput | InputJsonValue
+    includeDreams?: boolean | null
   }
 
   export type SpiralProfileUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
-    stageBlend?: JsonNullValueInput | InputJsonValue
+    stageBlend?: NullableJsonNullValueInput | InputJsonValue
     dominantBias?: NullableStringFieldUpdateOperationsInput | string | null
+    rawAnswers?: NullableJsonNullValueInput | InputJsonValue
+    includeDreams?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
 
   export type SpiralProfileUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
-    stageBlend?: JsonNullValueInput | InputJsonValue
+    stageBlend?: NullableJsonNullValueInput | InputJsonValue
     dominantBias?: NullableStringFieldUpdateOperationsInput | string | null
+    rawAnswers?: NullableJsonNullValueInput | InputJsonValue
+    includeDreams?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
 
   export type SpiralProfileCreateManyInput = {
     id?: string
     createdAt?: Date | string
     userId: string
-    stageBlend: JsonNullValueInput | InputJsonValue
+    stageBlend?: NullableJsonNullValueInput | InputJsonValue
     dominantBias?: string | null
+    rawAnswers?: NullableJsonNullValueInput | InputJsonValue
+    includeDreams?: boolean | null
   }
 
   export type SpiralProfileUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
-    stageBlend?: JsonNullValueInput | InputJsonValue
+    stageBlend?: NullableJsonNullValueInput | InputJsonValue
     dominantBias?: NullableStringFieldUpdateOperationsInput | string | null
+    rawAnswers?: NullableJsonNullValueInput | InputJsonValue
+    includeDreams?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
 
   export type SpiralProfileUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
-    stageBlend?: JsonNullValueInput | InputJsonValue
+    stageBlend?: NullableJsonNullValueInput | InputJsonValue
     dominantBias?: NullableStringFieldUpdateOperationsInput | string | null
+    rawAnswers?: NullableJsonNullValueInput | InputJsonValue
+    includeDreams?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
 
   export type GoalCreateInput = {
@@ -8778,14 +8826,14 @@ export namespace Prisma {
     content?: SortOrder
     dreamId?: SortOrder
   }
-  export type JsonFilter<$PrismaModel = never> =
+  export type JsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
-        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonFilterBase<$PrismaModel>>
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
       >
-    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
 
-  export type JsonFilterBase<$PrismaModel = never> = {
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
     equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
     path?: string[]
     mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
@@ -8817,6 +8865,11 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type BoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -8828,6 +8881,8 @@ export namespace Prisma {
     userId?: SortOrder
     stageBlend?: SortOrder
     dominantBias?: SortOrder
+    rawAnswers?: SortOrder
+    includeDreams?: SortOrder
   }
 
   export type SpiralProfileMaxOrderByAggregateInput = {
@@ -8835,6 +8890,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     userId?: SortOrder
     dominantBias?: SortOrder
+    includeDreams?: SortOrder
   }
 
   export type SpiralProfileMinOrderByAggregateInput = {
@@ -8842,15 +8898,16 @@ export namespace Prisma {
     createdAt?: SortOrder
     userId?: SortOrder
     dominantBias?: SortOrder
+    includeDreams?: SortOrder
   }
-  export type JsonWithAggregatesFilter<$PrismaModel = never> =
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
     | PatchUndefined<
-        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
       >
-    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
 
-  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
     equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
     path?: string[]
     mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
@@ -8865,9 +8922,9 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedJsonFilter<$PrismaModel>
-    _max?: NestedJsonFilter<$PrismaModel>
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -8888,6 +8945,14 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
+  export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
+  }
+
   export type DateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -8898,14 +8963,14 @@ export namespace Prisma {
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
-  export type JsonNullableFilter<$PrismaModel = never> =
+  export type JsonFilter<$PrismaModel = never> =
     | PatchUndefined<
-        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableFilterBase<$PrismaModel>>
+        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonFilterBase<$PrismaModel>>
       >
-    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
 
-  export type JsonNullableFilterBase<$PrismaModel = never> = {
+  export type JsonFilterBase<$PrismaModel = never> = {
     equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
     path?: string[]
     mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
@@ -8972,14 +9037,14 @@ export namespace Prisma {
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
-  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+  export type JsonWithAggregatesFilter<$PrismaModel = never> =
     | PatchUndefined<
-        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
       >
-    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
 
-  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
     equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
     path?: string[]
     mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
@@ -8994,9 +9059,9 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedJsonNullableFilter<$PrismaModel>
-    _max?: NestedJsonNullableFilter<$PrismaModel>
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedJsonFilter<$PrismaModel>
+    _max?: NestedJsonFilter<$PrismaModel>
   }
 
   export type BoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -9191,6 +9256,10 @@ export namespace Prisma {
     set?: string | null
   }
 
+  export type NullableBoolFieldUpdateOperationsInput = {
+    set?: boolean | null
+  }
+
   export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null
   }
@@ -9318,14 +9387,30 @@ export namespace Prisma {
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
-  export type NestedJsonFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
-        Required<NestedJsonFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
 
-  export type NestedJsonFilterBase<$PrismaModel = never> = {
+  export type NestedBoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
     equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
     path?: string[]
     mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
@@ -9359,15 +9444,12 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
@@ -9399,14 +9481,14 @@ export namespace Prisma {
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
-  export type NestedJsonNullableFilter<$PrismaModel = never> =
+  export type NestedJsonFilter<$PrismaModel = never> =
     | PatchUndefined<
-        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
-        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+        Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonFilterBase<$PrismaModel>>
       >
-    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+    | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
 
-  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+  export type NestedJsonFilterBase<$PrismaModel = never> = {
     equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
     path?: string[]
     mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
