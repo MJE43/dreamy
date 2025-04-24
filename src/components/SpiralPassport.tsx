@@ -1,64 +1,100 @@
 'use client'
 
-import { Skeleton } from "@/components/ui/skeleton";
+import React from 'react';
 import {
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-  Radar,
-  Tooltip,
-} from "recharts";
+  Radar, 
+  RadarChart, 
+  PolarGrid, 
+  PolarAngleAxis, 
+  PolarRadiusAxis, 
+  ResponsiveContainer,
+  Tooltip
+} from 'recharts';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
-export interface SpiralPassportProps {
-  stageBlend: Record<string, number>; // e.g., { BLUE: 0.55, ORANGE: 0.3 }
-  loading?: boolean;
+// Define the expected structure for stage blend data
+interface StageBlend {
+  [key: string]: number; // e.g., { RED: 0.2, BLUE: 0.5, ... }
 }
 
-const defaultColors: Record<string, string> = {
-  BEIGE: "#F5F5DC",
-  PURPLE: "#E6E6FA",
-  RED: "#FFCCCC",
-  BLUE: "#D0E0FF",
-  ORANGE: "#FFE5CC",
-  GREEN: "#D0F0C0",
-  YELLOW: "#FFFFE0",
-  TURQUOISE: "#AFEEEE",
+interface SpiralPassportProps {
+  stageBlend: StageBlend | null | undefined;
+}
+
+// Define a standard order and potential colors for stages
+const STAGE_ORDER: Record<string, { color: string, order: number }> = {
+    BEIGE:    { color: '#F5F5DC', order: 1 }, // Or appropriate colors
+    PURPLE:   { color: '#8A2BE2', order: 2 },
+    RED:      { color: '#DC143C', order: 3 },
+    BLUE:     { color: '#4169E1', order: 4 },
+    ORANGE:   { color: '#FFA500', order: 5 },
+    GREEN:    { color: '#228B22', order: 6 },
+    YELLOW:   { color: '#FFD700', order: 7 },
+    TURQUOISE:{ color: '#40E0D0', order: 8 },
 };
 
-export function SpiralPassport({ stageBlend, loading }: SpiralPassportProps) {
-  if (loading) return <Skeleton className="h-[300px] w-full rounded-xl" />;
+const SpiralPassport: React.FC<SpiralPassportProps> = ({ stageBlend }) => {
 
-  const data = Object.entries(stageBlend).map(([stage, value]) => ({
-    stage,
-    value: Math.round(value * 100),
-  }));
+  // Transform stageBlend into Recharts data format, respecting order and filling missing stages
+  const chartData = Object.entries(STAGE_ORDER)
+    .sort(([, a], [, b]) => a.order - b.order) // Sort by defined order
+    .map(([stage, { color }]) => ({
+      subject: stage.charAt(0) + stage.slice(1).toLowerCase(), // Capitalize
+      value: stageBlend?.[stage] ? Math.round(stageBlend[stage] * 100) : 0, // Use % and default to 0
+      fullMark: 100, // Max value for the axis
+      color: color, // Store color for potential use
+    }));
 
-  const dominant = data.reduce((a, b) => (a.value > b.value ? a : b), data[0]);
+  if (!stageBlend) {
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Spiral Passport</CardTitle>
+                <CardDescription>Your worldview analysis is processing.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <p>Check back soon for your results.</p>
+                 {/* Optional: Add a loading skeleton here */}
+            </CardContent>
+        </Card>
+    );
+  }
 
   return (
-    <div className="rounded-2xl bg-card p-4 shadow-sm space-y-4">
-      <h2 className="text-lg font-semibold">Spiral Passport</h2>
-      <div className="w-full flex justify-center">
-        <div className="w-full max-w-[360px]">
-          <RadarChart width={360} height={300} data={data} className="w-full">
-            <PolarGrid />
-            <PolarAngleAxis dataKey="stage" fontSize={12} />
-            <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} />
-            <Radar
-              name="You"
-              dataKey="value"
-              fill={defaultColors[dominant.stage] ?? "#8884d8"}
-              fillOpacity={0.6}
-            />
-            <Tooltip />
-          </RadarChart>
-        </div>
-      </div>
-      <p className="text-muted-foreground text-sm">
-        Your worldview is currently anchored in{" "}
-        <span className="font-medium">{dominant.stage}</span>, supported by traits from surrounding stages.
-      </p>
-    </div>
+    <Card>
+        <CardHeader>
+            <CardTitle>Spiral Passport</CardTitle>
+            <CardDescription>Your estimated worldview blend based on recent inputs.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+            <div style={{ width: '100%', height: 300 }}> {/* Define explicit size for ResponsiveContainer */}
+                <ResponsiveContainer>
+                    <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
+                        <PolarGrid />
+                        <PolarAngleAxis dataKey="subject" tick={{ fontSize: 12 }} />
+                        <PolarRadiusAxis angle={30} domain={[0, 100]} tickFormatter={(tick) => `${tick}%`} />
+                        <Radar 
+                            name="Stage Blend" 
+                            dataKey="value" 
+                            stroke="#8884d8" 
+                            fill="#8884d8" 
+                            fillOpacity={0.6} 
+                        />
+                        <Tooltip formatter={(value) => `${value}%`} />
+                        {/* <Legend /> */}{/* Legend might be redundant if only one Radar */}
+                    </RadarChart>
+                </ResponsiveContainer>
+            </div>
+            <div>
+                <h4 className="font-semibold mb-2">Narrative Summary</h4>
+                <p className="text-sm text-muted-foreground">
+                    {/* Placeholder for dynamic narrative based on stageBlend */} 
+                    Analysis pending...
+                </p>
+            </div>
+        </CardContent>
+    </Card>
   );
-} 
+};
+
+export default SpiralPassport; 

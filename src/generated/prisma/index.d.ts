@@ -8018,16 +8018,16 @@ export namespace Prisma {
 
   export type SpiralProfileWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    userId?: string
     AND?: SpiralProfileWhereInput | SpiralProfileWhereInput[]
     OR?: SpiralProfileWhereInput[]
     NOT?: SpiralProfileWhereInput | SpiralProfileWhereInput[]
     createdAt?: DateTimeFilter<"SpiralProfile"> | Date | string
-    userId?: StringFilter<"SpiralProfile"> | string
     stageBlend?: JsonNullableFilter<"SpiralProfile">
     dominantBias?: StringNullableFilter<"SpiralProfile"> | string | null
     rawAnswers?: JsonNullableFilter<"SpiralProfile">
     includeDreams?: BoolNullableFilter<"SpiralProfile"> | boolean | null
-  }, "id">
+  }, "id" | "userId">
 
   export type SpiralProfileOrderByWithAggregationInput = {
     id?: SortOrder

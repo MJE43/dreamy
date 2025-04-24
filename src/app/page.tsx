@@ -1,9 +1,12 @@
 import { createSupabaseServerClient } from '@/lib/supabase';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { PrismaClient } from "@/generated/prisma";
+import { PrismaClient, Prisma } from "@/generated/prisma";
 import { MoodData, MotifData, RecentDream } from "@/types";
 import DashboardClient from "./DashboardClient";
+
+// Define expected type for stageBlend prop (can be null)
+type StageBlend = Prisma.JsonValue | null;
 
 // --- Server Component (Default Export) ---
 export default async function Page() {
@@ -20,6 +23,13 @@ export default async function Page() {
   // --- End Auth Check ---
 
   const prisma = new PrismaClient();
+
+  // Fetch SpiralProfile
+  const spiralProfile = await prisma.spiralProfile.findUnique({
+    where: { userId: userId },
+    select: { stageBlend: true }
+  });
+  const stageBlendData: StageBlend = spiralProfile?.stageBlend ?? null;
 
   // Fetch Recent Dreams
   const recentDreams: RecentDream[] = await prisma.dream.findMany({
@@ -76,6 +86,7 @@ export default async function Page() {
       initialDreams={recentDreams}   // Pass as initialDreams
       initialMoodData={moodData}     // Pass as initialMoodData
       initialTopMotifs={topMotifs}  // Pass topMotifs as initialTopMotifs
+      initialStageBlend={stageBlendData} // Pass fetched stageBlend
     />
   );
 }

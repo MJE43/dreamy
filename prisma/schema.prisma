@@ -42,7 +42,7 @@ model Analysis {
 model SpiralProfile {
   id            String   @id @default(cuid())
   createdAt     DateTime @default(now())
-  userId        String            // Supabase Auth UUID
+  userId        String   @unique          // Supabase Auth UUID - Added @unique
   stageBlend    Json?                     // e.g. {"green":0.6,"orange":0.3,"yellow":0.1} - Classifier output
   dominantBias  String?                   // optional narrative tag
   rawAnswers    Json?                     // Dilemma answers: [{ "code": "DILEMMA_01", "choice": "A" }, ...]
