@@ -1,0 +1,1 @@
+export { SpiralPassport } from "./SpiralPassport"; 

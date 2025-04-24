@@ -44,7 +44,7 @@ export async function POST(request: Request) {
     console.log(`API /onboarding/dilemmas - Saving profile for user ${userId}`);
 
     await prisma.spiralProfile.upsert({
-      where: { userId: userId },
+      where: { id: userId },
       update: {
         rawAnswers: answers, // Store the array directly as JSON
         includeDreams: includeDreams,

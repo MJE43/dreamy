@@ -3,7 +3,8 @@ import { cookies } from 'next/headers';
 import { createSupabaseServerClient } from '@/lib/supabase';
 import { PrismaClient } from '@/generated/prisma'; // Use correct import path
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { Prisma } from '@prisma/client'; // Import JsonValue type
+// Prisma.JsonValue might be directly available or under the Prisma namespace depending on version/generation
+// If Prisma.JsonValue still causes issues, consider using 'any' or defining a more specific type.
 
 const prisma = new PrismaClient();
 
@@ -38,7 +39,7 @@ export async function POST(_request: Request) {
 
     // --- 1. Fetch required data --- 
     const profile = await prisma.spiralProfile.findUnique({
-      where: { userId },
+      where: { id: userId },
       select: { rawAnswers: true, includeDreams: true }
     });
 
@@ -54,7 +55,7 @@ export async function POST(_request: Request) {
     if (includeDreams) {
       // TODO: Fetch last ~5-10 dream descriptions for this user
       const dreams = await prisma.dream.findMany({ 
-          where: { userId }, 
+          where: { userId: userId },
           select: { description: true }, 
           orderBy: { createdAt: 'desc' }, 
           take: 10 
@@ -101,8 +102,8 @@ export async function POST(_request: Request) {
     // --- 5. Update Profile in DB --- 
     if (stageBlend) {
         await prisma.spiralProfile.update({
-            where: { userId },
-            data: { stageBlend: stageBlend as Prisma.JsonValue },
+            where: { id: userId },
+            data: { stageBlend: stageBlend as any },
         });
         console.log(`API /classifyWorldview - Updated profile for user ${userId}`);
     } else {
