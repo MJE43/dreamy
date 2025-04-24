@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { fetchDilemmas, DilemmaForQuiz } from './actions'; // Server Action
-import DilemmaCard from '@/components/DilemmaCard';
+import DilemmaCard from '@/components/DilemmaCard'; // Restore alias import
+// import DilemmaCard from '../../../../components/DilemmaCard';
 import { Button } from '@/components/ui/button';
 import { Progress } from "@/components/ui/progress"; // For progress bar
 

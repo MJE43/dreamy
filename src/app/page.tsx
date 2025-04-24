@@ -5,32 +5,30 @@ import { PrismaClient, Prisma } from "@/generated/prisma";
 import { MoodData, MotifData, RecentDream } from "@/types";
 import DashboardClient from "./DashboardClient";
 
-// Define expected type for stageBlend prop (can be null)
 type StageBlend = Prisma.JsonValue | null;
 
-// --- Server Component (Default Export) ---
 export default async function Page() {
-  // --- Supabase Auth Check ---
+  // Restore original logic
+
   const cookieStore = await cookies();
   const supabase = createSupabaseServerClient(cookieStore);
   const { data: { user }, error: authError } = await supabase.auth.getUser();
-
+  
   if (authError || !user) {
     console.error('Home Page - Auth Error:', authError);
     redirect('/login');
   }
   const userId = user.id;
-  // --- End Auth Check ---
-
+  
   const prisma = new PrismaClient();
-
+  
   // Fetch SpiralProfile
   const spiralProfile = await prisma.spiralProfile.findUnique({
     where: { userId: userId },
     select: { stageBlend: true }
   });
   const stageBlendData: StageBlend = spiralProfile?.stageBlend ?? null;
-
+  
   // Fetch Recent Dreams
   const recentDreams: RecentDream[] = await prisma.dream.findMany({
     where: { userId: userId },
@@ -41,7 +39,7 @@ export default async function Page() {
       analysis: { select: { id: true, content: true, createdAt: true } }
     }
   });
-
+  
   // Fetch Mood Data
   const moodDataRaw = await prisma.dream.findMany({
     where: { userId: userId },
@@ -53,13 +51,13 @@ export default async function Page() {
     date: new Date(dream.createdAt).toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' }),
     mood: dream.mood,
   }));
-
+  
   // Fetch Tags for Motif Cloud
   const allDreamsForTags = await prisma.dream.findMany({
     where: { userId: userId },
     select: { tags: true }
   });
-
+  
   // Keep helper function for motifs
   function getTopMotifs(dreams: { tags: string[] | null }[], count: number): MotifData[] {
     const tagCounts: { [key: string]: number } = {};
@@ -78,15 +76,24 @@ export default async function Page() {
       .sort((a, b) => b.count - a.count)
       .slice(0, count);
   }
-  // Calculate topMotifs - needed by DashboardClient
   const topMotifs: MotifData[] = getTopMotifs(allDreamsForTags, 15);
-
+  
   return (
     <DashboardClient
-      initialDreams={recentDreams}   // Pass as initialDreams
-      initialMoodData={moodData}     // Pass as initialMoodData
-      initialTopMotifs={topMotifs}  // Pass topMotifs as initialTopMotifs
-      initialStageBlend={stageBlendData} // Pass fetched stageBlend
+      initialDreams={recentDreams}
+      initialMoodData={moodData}
+      initialTopMotifs={topMotifs}
+      initialStageBlend={stageBlendData}
     />
   );
+
+  // Remove minimal test element
+  /*
+  return (
+    <div>
+      <h1>Root Page Test</h1>
+      <p>If you see this, the basic routing works.</p>
+    </div>
+  );
+  */
 }

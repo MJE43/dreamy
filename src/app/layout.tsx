@@ -25,8 +25,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Dreamy - Dream Analysis",
-  description: "Analyze your dreams with AI",
+  title: "SpiralCoach", // Updated title
+  description: "Navigate your inner world.", // Updated description
 };
 
 export default function RootLayout({
