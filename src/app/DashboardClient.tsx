@@ -80,7 +80,15 @@ export default function DashboardClient({
             stageBlend={initialStageBlend as Record<string, number>}
             narrativeSummary={initialDominantBias}
           />
-          <CoachChat /> { /* Render the chat component */ }
+          {/* Wrap CoachChat in a Card for styling and structure */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Coach</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CoachChat /> { /* CoachChat now sits inside CardContent */ }
+            </CardContent>
+          </Card>
         </div>
 
         {/* --- Column 2: Goals & Recent Dreams --- */}
