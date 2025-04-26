@@ -10,7 +10,6 @@ import {
   ResponsiveContainer,
   Tooltip
 } from 'recharts';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 
 // Define the expected structure for stage blend data
 interface StageBlend {
@@ -46,54 +45,72 @@ const SpiralPassport: React.FC<SpiralPassportProps> = ({ stageBlend, narrativeSu
       color: color, // Store color for potential use
     }));
 
+  // Simplified loading/error state (without Card)
   if (!stageBlend) {
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle>Spiral Passport</CardTitle>
-                <CardDescription>Your worldview analysis is processing.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <p>Check back soon for your results.</p>
-                 {/* Optional: Add a loading skeleton here */}
-            </CardContent>
-        </Card>
+        <div className="p-6 bg-card text-card-foreground rounded-lg shadow">
+           <h3 className="text-lg font-semibold mb-2">Spiral Passport</h3>
+           <p className="text-sm text-muted-foreground">Your worldview analysis is processing. Check back soon.</p>
+            {/* Optional: Add a loading skeleton here */}
+        </div>
     );
   }
 
+  // Render directly without Card wrapper
   return (
-    <Card>
-        <CardHeader>
-            <CardTitle>Spiral Passport</CardTitle>
-            <CardDescription>Your estimated worldview blend based on recent inputs.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-            <div style={{ width: '100%', height: 300 }}> {/* Define explicit size for ResponsiveContainer */}
-                <ResponsiveContainer>
-                    <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
-            <PolarGrid />
-                        <PolarAngleAxis dataKey="subject" tick={{ fontSize: 12 }} />
-                        <PolarRadiusAxis angle={30} domain={[0, 100]} tickFormatter={(tick) => `${tick}%`} />
-            <Radar
-                            name="Stage Blend" 
-              dataKey="value"
-                            stroke="#8884d8" 
-                            fill="#8884d8" 
-              fillOpacity={0.6}
-            />
-                        <Tooltip formatter={(value) => `${value}%`} />
-                        {/* <Legend /> */}{/* Legend might be redundant if only one Radar */}
-          </RadarChart>
-                </ResponsiveContainer>
+    <div className="space-y-4"> {/* Replaces Card */} 
+        {/* Removed CardHeader and CardTitle */}
+
+        {/* Chart Section */}
+        <div style={{ width: '100%', height: 300 }}>
+          <ResponsiveContainer>
+              <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
+                {/* SVG Gradient Definition */}
+                <defs>
+                  <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#2563eb" stopOpacity={0.8}/> {/* Primary Blue */}
+                    <stop offset="95%" stopColor="#40E0D0" stopOpacity={0.7}/> {/* Turquoise */} 
+                  </linearGradient>
+                </defs>
+                
+                {/* Grid and Axes */}
+                <PolarGrid stroke="#445566" />
+                <PolarAngleAxis 
+                    dataKey="subject" 
+                    tick={{ fill: '#FFFFFF', fontSize: 12 }} 
+                    tickFormatter={(value) => value.toUpperCase()}
+                />
+                <PolarRadiusAxis angle={30} domain={[0, 100]} tickFormatter={(tick) => `${tick}%`} axisLine={{ stroke: '#FFFFFF' }} tick={{ fill: '#FFFFFF' }}/>
+                
+                {/* Radar Area */}
+                <Radar
+                  name="Stage Blend"
+                  dataKey="value"
+                  stroke="#FFFFFF"  /* White outline */
+                  fill="url(#colorGradient)" /* Use gradient fill */
+                  fillOpacity={1} /* Opacity controlled by gradient stops */
+                />
+                
+                {/* Tooltip */}
+                <Tooltip 
+                    formatter={(value) => `${value}%`} 
+                    contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #334155'}}
+                    labelStyle={{ color: '#FFFFFF' }}
+                />
+              </RadarChart>
+            </ResponsiveContainer>
         </div>
-            <div>
+
+        {/* Narrative Summary Section (Optional) */}
+        {narrativeSummary && (
+            <div className="p-4 bg-card text-card-foreground rounded-lg"> {/* Added padding/bg */}
                 <h4 className="font-semibold mb-2">Narrative Summary</h4>
                 <p className="text-sm text-muted-foreground">
-                    {narrativeSummary ? narrativeSummary : "Analysis pending..."}
+                    {narrativeSummary}
                 </p>
             </div>
-        </CardContent>
-    </Card>
+        )}
+    </div>
   );
 };
 

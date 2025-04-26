@@ -1,168 +1,54 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+/* Define runtime CSS variables for theme */
+:root {
+  --color-background: #020617;
+  --color-foreground: #f8fafc;
+  --color-card: #0f172a;
+  --color-card-foreground: #f8fafc;
+  --color-popover: #0f172a;
+  --color-popover-foreground: #f8fafc;
+  --color-secondary: #1e293b;
+  --color-secondary-foreground: #f8fafc;
+  --color-muted: #1e293b;
+  --color-muted-foreground: #94a3b8;
+  --color-accent: #1e293b;
+  --color-accent-foreground: #f8fafc;
+  --color-destructive: #ef4444;
+  --color-border: #334155;
+  --color-input: #334155;
+  --color-ring: #2563eb;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary-500);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
+  /* Primary color scale (blue) */
+    --color-primary-50: #eff6ff;
+    --color-primary-100: #dbeafe;
+    --color-primary-200: #bfdbfe;
+    --color-primary-300: #93c5fd;
+    --color-primary-400: #60a5fa;
+    --color-primary-500: #3b82f6;
+    --color-primary-600: #2563eb;
+    --color-primary-700: #1d4ed8;
+    --color-primary-800: #1e40af;
+    --color-primary-900: #1e3a8a;
+    --color-primary-950: #172554;
+    --color-primary: #2563eb;
+    --color-primary-foreground: #ffffff;
+  
+    /* Radius */
+    --radius: 0.625rem;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-/* v0 Colors - Add purple palette */
-  --color-primary-50: var(--primary-50);
-  --color-primary-100: var(--primary-100);
-  --color-primary-200: var(--primary-200);
-  --color-primary-300: var(--primary-300);
-  --color-primary-400: var(--primary-400);
-  --color-primary-500: var(--primary-500);
-  --color-primary-600: var(--primary-600);
-  --color-primary-700: var(--primary-700);
-  --color-primary-800: var(--primary-800);
-  --color-primary-900: var(--primary-900);
-  --color-primary-950: var(--primary-950);
-  --color-primary: var(--primary-500);
-  /* Default primary to 500 */
-  --color-orange-50: var(--orange-50);
-    --color-orange-100: var(--orange-100);
-    --color-orange-200: var(--orange-200);
-    --color-orange-300: var(--orange-300);
-    --color-orange-400: var(--orange-400);
-    --color-orange-500: var(--orange-500);
-    --color-orange-600: var(--orange-600);
-    --color-orange-700: var(--orange-700);
-    --color-orange-800: var(--orange-800);
-    --color-orange-900: var(--orange-900);
-    --color-orange-950: var(--orange-950);
-    /* Default primary to 500 */
-    --primary-foreground: #ffffff;
-    /* White text on primary */
-  
-    /* v0 Gradients */
-    --gradient-light-from: #f3e8ff;
-    /* purple-50 */
-    --gradient-light-to: #e0e7ff;
-    /* indigo-50 */
-    --gradient-dark-from: #0f172a;
-    /* slate-950 */
-    --gradient-dark-to: #3730a3;
-    /* indigo-950 - adjusted from v0 purple-950 for better blend */
-}
 
-:root {
-  --radius: 0.625rem;
-  --background: #ffffff;
-    --foreground: #111827;
-    --card: #ffffff;
-    --card-foreground: #111827;
-    --popover: #ffffff;
-    --popover-foreground: #111827;
-    --secondary: #f3f4f6;
-    --secondary-foreground: #1f2937;
-    --muted: #f3f4f6;
-    --muted-foreground: #6b7280;
-    --accent: #f3f4f6;
-    --accent-foreground: #1f2937;
-    --destructive: #ef4444;
-    --border: #e5e7eb;
-    --input: #e5e7eb;
-    --ring: #f97316;
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-  --accent-brand: oklch(0.61 0.16 265);
-/* v0 Purple Palette */
-  --primary-50: #f5f3ff;
-  --primary-100: #ede9fe;
-  --primary-200: #ddd6fe;
-  --primary-300: #c4b5fd;
-  --primary-400: #a78bfa;
-  --primary-500: #8b5cf6;
-  --primary-600: #7c3aed;
-  --primary-700: #6d28d9;
-  --primary-800: #5b21b6;
-  --primary-900: #4c1d95;
-  --primary-950: #2e1065;
-  --primary: var(--orange-600);
-  /* Default primary */
-  --primary-foreground: #ffffff;
-  /* White text on primary */
-
-  /* v0 Gradients */
-  --gradient-light-from: #f3e8ff;
-  /* purple-50 */
-  --gradient-light-to: #e0e7ff;
-  /* indigo-50 */
-  --gradient-dark-from: #0f172a;
-  /* slate-950 */
-  --gradient-dark-to: #3730a3;
-  /* indigo-950 - adjusted from v0 purple-950 for better blend */
-}
-
-.dark {
-  --background: #020617;
-    --foreground: #f8fafc;
-    --card: #0f172a;
-    --card-foreground: #f8fafc;
-    --popover: #0f172a;
-    --popover-foreground: #f8fafc;
-    --secondary: #1e293b;
-    --secondary-foreground: #f8fafc;
-    --muted: #1e293b;
-    --muted-foreground: #94a3b8;
-    --accent: #1e293b;
-    --accent-foreground: #f8fafc;
-    --destructive: #ef4444;
-    --border: #334155;
-    --input: #334155;
-    --ring: var(--orange-500);
+  /* Chart colors */
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
+/* Sidebar colors */
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);
@@ -171,47 +57,151 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
   --accent-brand: oklch(0.61 0.16 265);
-/* v0 Purple Palette - Dark mode adjustments (if needed, v0 code uses dark:bg-slate-900 etc) */
-  /* Keep light mode purples for now, rely on utility overrides like dark:bg-slate-900 */
-  --primary-50: #f5f3ff;
-  --primary-100: #ede9fe;
-  --primary-200: #ddd6fe;
-  --primary-300: #c4b5fd;
-  --primary-400: #a78bfa;
-  --primary-500: #8b5cf6;
-  --primary-600: #7c3aed;
-  --primary-700: #6d28d9;
-  --primary-800: #5b21b6;
-  --primary-900: #4c1d95;
-  --primary-950: #2e1065;
-  --primary: var(--orange-500);
-  /* Lighter primary for dark mode */
-  --primary-foreground: #ffffff;
-  /* White text on primary */
 }
 
 @layer base {
-  * {
-    @apply border-border outline-[oklch(var(--accent-brand)/0.5)];
+  *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+      border-color: var(--color-border, currentColor);
   }
   body {
-    @apply text-foreground;
-      @apply bg-gradient-to-b from-[var(--gradient-light-from)] to-[var(--gradient-light-to)];
-  }
-    .dark body {
-      @apply bg-gradient-to-b from-[var(--gradient-dark-from)] to-[var(--gradient-dark-to)];
+    color: var(--color-foreground);
+      background-color: var(--color-background);
     }
-h1 {
-  @apply font-serif italic;
-}
-
-*:focus-visible {
-  @apply outline-2 outline-offset-2 outline-[oklch(var(--accent-brand))];
-}
+        h1 {
+          @apply font-serif italic;
+        }
+        *:focus-visible {
+    outline-style: solid;
+      outline-width: 2px;
+      outline-offset: 2px;
+      outline-color: oklch(var(--accent-brand));
+    }
 }
 
 /* Custom Slider Track Style */
 .mood-slider>[data-slot='track'] {
   @apply bg-gradient-to-r from-lime-500 via-amber-500 to-rose-500;
+}
+
+/* --- Custom Utility Definitions for Theme Variables --- */
+
+/* Background Colors */
+@utility bg-background {
+  background-color: var(--color-background);
+}
+
+@utility bg-card {
+  background-color: var(--color-card);
+}
+
+@utility bg-popover {
+  background-color: var(--color-popover);
+}
+
+@utility bg-primary {
+  background-color: var(--color-primary);
+}
+
+@utility bg-secondary {
+  background-color: var(--color-secondary);
+}
+
+@utility bg-muted {
+  background-color: var(--color-muted);
+}
+
+@utility bg-accent {
+  background-color: var(--color-accent);
+}
+
+@utility bg-destructive {
+  background-color: var(--color-destructive);
+}
+
+/* Text Colors */
+@utility text-foreground {
+  color: var(--color-foreground);
+}
+
+@utility text-card-foreground {
+  color: var(--color-card-foreground);
+}
+
+@utility text-popover-foreground {
+  color: var(--color-popover-foreground);
+}
+
+@utility text-primary {
+  color: var(--color-primary);
+}
+
+@utility text-primary-foreground {
+  color: var(--color-primary-foreground);
+}
+
+@utility text-secondary {
+  color: var(--color-secondary);
+}
+
+@utility text-secondary-foreground {
+  color: var(--color-secondary-foreground);
+}
+
+@utility text-muted {
+  color: var(--color-muted);
+}
+
+@utility text-muted-foreground {
+  color: var(--color-muted-foreground);
+}
+
+@utility text-accent {
+  color: var(--color-accent);
+}
+
+@utility text-accent-foreground {
+  color: var(--color-accent-foreground);
+}
+
+@utility text-destructive {
+  color: var(--color-destructive);
+}
+
+/* Border Colors */
+@utility border-border {
+  border-color: var(--color-border);
+}
+
+@utility border-primary {
+  border-color: var(--color-primary);
+}
+
+@utility border-secondary {
+  border-color: var(--color-secondary);
+}
+
+/* ... add others as needed ... */
+
+/* Ring Colors */
+@utility ring-ring {
+  /* Assuming ring color variable controls the --tw-ring-color used by ring utilities */
+  --tw-ring-color: var(--color-ring);
+}
+
+@utility ring-primary {
+  --tw-ring-color: var(--color-primary);
+}
+
+/* ... add others as needed ... */
+
+/* Input Colors (if needed as utilities) */
+@utility input-input {
+  /* Might apply to border or background depending on usage */
+  border-color: var(--color-input);
 }

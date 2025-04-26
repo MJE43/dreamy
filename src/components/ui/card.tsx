@@ -11,10 +11,8 @@ function Card({ className, ...props }: React.ComponentProps<typeof motion.div>) 
     <motion.div
       data-slot="card"
       className={cn(
-        "bg-gradient-to-b from-indigo-800 to-indigo-950 border border-indigo-400/40 text-card-foreground flex flex-col gap-6 rounded-2xl py-6",
+        "bg-card border border-border text-card-foreground flex flex-col gap-6 rounded-lg py-6",
         "shadow-[0_10px_20px_rgba(0,0,0,0.3),_inset_0_1px_3px_rgba(255,255,255,0.06)]",
-        "transition-all duration-200 ease-out",
-        "hover:-translate-y-0.5 hover:shadow-[0_15px_30px_rgba(0,0,0,0.4),_inset_0_1px_3px_rgba(255,255,255,0.06)]",
         className
       )}
       initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
