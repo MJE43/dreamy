@@ -1,25 +1,27 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { SendHorizonal } from 'lucide-react';
-
-interface Message {
-  id: string;
-  text: string;
-  sender: 'user' | 'ai';
-}
+import { SendHorizonal, RefreshCw, Loader2 } from 'lucide-react';
+import { useChat } from '@ai-sdk/react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const CoachChat: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const eventSourceRef = useRef<EventSource | null>(null);
+  const {
+    messages, 
+    input, 
+    handleInputChange, 
+    handleSubmit, 
+    isLoading,
+    error, 
+    stop,
+    reload
+  } = useChat({ api: '/api/coach' });
+
   const scrollAreaRef = useRef<HTMLDivElement>(null);
-  const currentAiMessageId = useRef<string | null>(null);
 
   const scrollToBottom = useCallback(() => {
     if (scrollAreaRef.current) {
@@ -30,157 +32,68 @@ const CoachChat: React.FC = () => {
     }
   }, []);
 
-  // Effect to connect to SSE stream
-  useEffect(() => {
-    const eventSource = new EventSource('/api/coach');
-    eventSourceRef.current = eventSource;
-
-    eventSource.onopen = () => {
-      console.log('SSE connection opened');
-      setError(null);
-    };
-
-    eventSource.onmessage = (event) => {
-      console.log('SSE message received:', event.data);
-      try {
-        if (event.data.startsWith(': connected')) {
-            console.log("SSE connection confirmed by server.");
-            return;
-        }
-
-        const messageData = JSON.parse(event.data);
-        
-        if (messageData.error) {
-            console.error("Received error via SSE:", messageData.error);
-            setError(messageData.error);
-            setIsLoading(false);
-            currentAiMessageId.current = null;
-            return;
-        }
-
-        if (messageData.text) {
-            setMessages((prevMessages) => {
-                const lastMessage = prevMessages[prevMessages.length - 1];
-                
-                if (lastMessage?.id === currentAiMessageId.current && lastMessage.sender === 'ai') {
-                    const updatedMessages = [...prevMessages];
-                    updatedMessages[prevMessages.length - 1] = {
-                        ...lastMessage,
-                        text: lastMessage.text + messageData.text,
-                    };
-                    return updatedMessages;
-                } else {
-                    console.warn("Streaming chunk received, but no matching AI message found. Creating new bubble.");
-                    const newAiMessage: Message = {
-                        id: currentAiMessageId.current || Date.now().toString(),
-                        text: messageData.text,
-                        sender: 'ai',
-                    };
-                    return [...prevMessages, newAiMessage];
-                }
-            });
-            setIsLoading(false);
-            scrollToBottom();
-        }
-
-      } catch (e) {
-        console.error('Failed to parse SSE message:', e, "Raw data:", event.data);
-      }
-    };
-
-    eventSource.onerror = (err) => {
-      console.error('SSE error:', err);
-      setError('Connection error with the coach. Please try refreshing.');
-      setIsLoading(false);
-      eventSource.close();
-    };
-
-    // Cleanup
-    return () => {
-      console.log('Closing SSE connection');
-      eventSource.close();
-      eventSourceRef.current = null;
-      currentAiMessageId.current = null;
-    };
-  }, []);
-
   useEffect(() => {
     scrollToBottom();
   }, [messages, scrollToBottom]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim() || isLoading) return;
-
-    const userMessageId = Date.now().toString();
-    const aiMessageId = (Date.now() + 1).toString();
-    currentAiMessageId.current = aiMessageId;
-
-    const userMessage: Message = { id: userMessageId, text: input, sender: 'user' };
-    const aiPlaceholder: Message = { id: aiMessageId, text: '', sender: 'ai' }; 
-    
-    setMessages((prev) => [...prev, userMessage, aiPlaceholder]);
-    setInput('');
-    setIsLoading(true);
-    setError(null);
-    setTimeout(scrollToBottom, 0); 
-
-    try {
-      const response = await fetch('/api/coach', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: input }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || 'Failed to send message');
-      }
-
-    } catch (err: unknown) {
-      let errorMessage = 'Failed to communicate with coach.';
-      if (err instanceof Error) {
-          errorMessage = err.message;
-      }
-      console.error("Error sending message:", err);
-      setError(errorMessage);
-      setIsLoading(false);
-      setMessages(prev => prev.filter(msg => msg.id !== aiMessageId));
-      currentAiMessageId.current = null;
-    }
-  };
-
   return (
     <div className="flex flex-col h-[400px] border rounded-md">
-      <ScrollArea className="flex-grow p-4" ref={scrollAreaRef}>
+      <ScrollArea className="flex-grow p-4 min-h-0" ref={scrollAreaRef}>
         <div className="space-y-4">
           {messages.map((msg) => (
-            <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+            <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               <div 
-                className={`rounded-lg px-3 py-2 max-w-[75%] text-sm whitespace-pre-wrap ${
-                    msg.sender === 'user' 
+                className={`prose dark:prose-invert prose-sm max-w-none rounded-lg px-3 py-2 ${
+                    msg.role === 'user' 
                         ? 'bg-primary text-primary-foreground' 
                         : 'bg-muted'
                 }`}
               >
-                {msg.sender === 'ai' && msg.text === '' ? '...' : msg.text}
+                {msg.role === 'assistant' ? (
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {msg.content}
+                    </ReactMarkdown>
+                ) : (
+                   msg.content
+                )}
               </div>
             </div>
           ))}
+          {isLoading && messages[messages.length-1]?.role === 'user' && (
+             <div className="flex justify-start">
+                 <div className="rounded-lg px-3 py-2 max-w-[75%] text-sm bg-muted flex items-center space-x-1">
+                   <Loader2 className="h-4 w-4 animate-spin" />
+                   <span>Thinking...</span>
+                 </div>
+             </div>
+          )}
         </div>
       </ScrollArea>
-      {error && <p className="text-red-500 text-xs px-4 py-1 border-t">Error: {error}</p>}
+      {error && (
+         <div className="text-red-500 text-xs px-4 py-1 border-t flex justify-between items-center">
+           <span>Error: {error.message}</span>
+           <Button onClick={() => reload()} variant="ghost" size="sm">
+             <RefreshCw className="h-3 w-3 mr-1"/> Retry
+           </Button>
+         </div>
+       )}
       <form onSubmit={handleSubmit} className="p-2 border-t flex items-center gap-2">
         <Input
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={handleInputChange}
           placeholder="Ask your coach..."
           disabled={isLoading}
           className="flex-grow"
         />
-        <Button type="submit" size="icon" disabled={isLoading || !input.trim()}>
-          <SendHorizonal className="h-4 w-4" />
-        </Button>
+        {isLoading ? (
+           <Button type="button" onClick={stop} variant="outline" size="icon" aria-label="Stop generation">
+             <Loader2 className="h-4 w-4 animate-spin" />
+           </Button>
+         ) : (
+           <Button type="submit" size="icon" disabled={!input.trim()} aria-label="Send message">
+             <SendHorizonal className="h-4 w-4" />
+           </Button>
+         )}
       </form>
     </div>
   );
