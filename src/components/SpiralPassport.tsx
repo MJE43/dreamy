@@ -3,14 +3,14 @@
 import React from 'react';
 import {
   Radar, 
-  RadarChart, 
-  PolarGrid, 
-  PolarAngleAxis, 
-  PolarRadiusAxis, 
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
   ResponsiveContainer,
   Tooltip
 } from 'recharts';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 
 // Define the expected structure for stage blend data
 interface StageBlend {
@@ -19,6 +19,7 @@ interface StageBlend {
 
 interface SpiralPassportProps {
   stageBlend: StageBlend | null | undefined;
+  narrativeSummary?: string | null;
 }
 
 // Define a standard order and potential colors for stages
@@ -33,7 +34,7 @@ const STAGE_ORDER: Record<string, { color: string, order: number }> = {
     TURQUOISE:{ color: '#40E0D0', order: 8 },
 };
 
-const SpiralPassport: React.FC<SpiralPassportProps> = ({ stageBlend }) => {
+const SpiralPassport: React.FC<SpiralPassportProps> = ({ stageBlend, narrativeSummary }) => {
 
   // Transform stageBlend into Recharts data format, respecting order and filling missing stages
   const chartData = Object.entries(STAGE_ORDER)
@@ -70,26 +71,25 @@ const SpiralPassport: React.FC<SpiralPassportProps> = ({ stageBlend }) => {
             <div style={{ width: '100%', height: 300 }}> {/* Define explicit size for ResponsiveContainer */}
                 <ResponsiveContainer>
                     <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
-                        <PolarGrid />
+            <PolarGrid />
                         <PolarAngleAxis dataKey="subject" tick={{ fontSize: 12 }} />
                         <PolarRadiusAxis angle={30} domain={[0, 100]} tickFormatter={(tick) => `${tick}%`} />
-                        <Radar 
+            <Radar
                             name="Stage Blend" 
-                            dataKey="value" 
+              dataKey="value"
                             stroke="#8884d8" 
                             fill="#8884d8" 
-                            fillOpacity={0.6} 
-                        />
+              fillOpacity={0.6}
+            />
                         <Tooltip formatter={(value) => `${value}%`} />
                         {/* <Legend /> */}{/* Legend might be redundant if only one Radar */}
-                    </RadarChart>
+          </RadarChart>
                 </ResponsiveContainer>
-            </div>
+        </div>
             <div>
                 <h4 className="font-semibold mb-2">Narrative Summary</h4>
                 <p className="text-sm text-muted-foreground">
-                    {/* Placeholder for dynamic narrative based on stageBlend */} 
-                    Analysis pending...
+                    {narrativeSummary ? narrativeSummary : "Analysis pending..."}
                 </p>
             </div>
         </CardContent>

@@ -39,6 +39,11 @@ export type Goal = $Result.DefaultSelection<Prisma.$GoalPayload>
  */
 export type CheckIn = $Result.DefaultSelection<Prisma.$CheckInPayload>
 /**
+ * Model Alert
+ * 
+ */
+export type Alert = $Result.DefaultSelection<Prisma.$AlertPayload>
+/**
  * Model SpiralReference
  * 
  */
@@ -235,6 +240,16 @@ export class PrismaClient<
     * ```
     */
   get checkIn(): Prisma.CheckInDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.alert`: Exposes CRUD operations for the **Alert** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Alerts
+    * const alerts = await prisma.alert.findMany()
+    * ```
+    */
+  get alert(): Prisma.AlertDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.spiralReference`: Exposes CRUD operations for the **SpiralReference** model.
@@ -690,6 +705,7 @@ export namespace Prisma {
     SpiralProfile: 'SpiralProfile',
     Goal: 'Goal',
     CheckIn: 'CheckIn',
+    Alert: 'Alert',
     SpiralReference: 'SpiralReference'
   };
 
@@ -709,7 +725,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "dream" | "analysis" | "spiralProfile" | "goal" | "checkIn" | "spiralReference"
+      modelProps: "dream" | "analysis" | "spiralProfile" | "goal" | "checkIn" | "alert" | "spiralReference"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1083,6 +1099,80 @@ export namespace Prisma {
           }
         }
       }
+      Alert: {
+        payload: Prisma.$AlertPayload<ExtArgs>
+        fields: Prisma.AlertFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AlertFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AlertPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AlertFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AlertPayload>
+          }
+          findFirst: {
+            args: Prisma.AlertFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AlertPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AlertFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AlertPayload>
+          }
+          findMany: {
+            args: Prisma.AlertFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AlertPayload>[]
+          }
+          create: {
+            args: Prisma.AlertCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AlertPayload>
+          }
+          createMany: {
+            args: Prisma.AlertCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AlertCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AlertPayload>[]
+          }
+          delete: {
+            args: Prisma.AlertDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AlertPayload>
+          }
+          update: {
+            args: Prisma.AlertUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AlertPayload>
+          }
+          deleteMany: {
+            args: Prisma.AlertDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AlertUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AlertUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AlertPayload>[]
+          }
+          upsert: {
+            args: Prisma.AlertUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AlertPayload>
+          }
+          aggregate: {
+            args: Prisma.AlertAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAlert>
+          }
+          groupBy: {
+            args: Prisma.AlertGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AlertGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AlertCountArgs<ExtArgs>
+            result: $Utils.Optional<AlertCountAggregateOutputType> | number
+          }
+        }
+      }
       SpiralReference: {
         payload: Prisma.$SpiralReferencePayload<ExtArgs>
         fields: Prisma.SpiralReferenceFieldRefs
@@ -1246,6 +1336,7 @@ export namespace Prisma {
     spiralProfile?: SpiralProfileOmit
     goal?: GoalOmit
     checkIn?: CheckInOmit
+    alert?: AlertOmit
     spiralReference?: SpiralReferenceOmit
   }
 
@@ -6617,6 +6708,1014 @@ export namespace Prisma {
 
 
   /**
+   * Model Alert
+   */
+
+  export type AggregateAlert = {
+    _count: AlertCountAggregateOutputType | null
+    _min: AlertMinAggregateOutputType | null
+    _max: AlertMaxAggregateOutputType | null
+  }
+
+  export type AlertMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    userId: string | null
+    type: string | null
+    message: string | null
+    isRead: boolean | null
+  }
+
+  export type AlertMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    userId: string | null
+    type: string | null
+    message: string | null
+    isRead: boolean | null
+  }
+
+  export type AlertCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    userId: number
+    type: number
+    message: number
+    isRead: number
+    _all: number
+  }
+
+
+  export type AlertMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    userId?: true
+    type?: true
+    message?: true
+    isRead?: true
+  }
+
+  export type AlertMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    userId?: true
+    type?: true
+    message?: true
+    isRead?: true
+  }
+
+  export type AlertCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    userId?: true
+    type?: true
+    message?: true
+    isRead?: true
+    _all?: true
+  }
+
+  export type AlertAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Alert to aggregate.
+     */
+    where?: AlertWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Alerts to fetch.
+     */
+    orderBy?: AlertOrderByWithRelationInput | AlertOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AlertWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Alerts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Alerts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Alerts
+    **/
+    _count?: true | AlertCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AlertMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AlertMaxAggregateInputType
+  }
+
+  export type GetAlertAggregateType<T extends AlertAggregateArgs> = {
+        [P in keyof T & keyof AggregateAlert]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAlert[P]>
+      : GetScalarType<T[P], AggregateAlert[P]>
+  }
+
+
+
+
+  export type AlertGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AlertWhereInput
+    orderBy?: AlertOrderByWithAggregationInput | AlertOrderByWithAggregationInput[]
+    by: AlertScalarFieldEnum[] | AlertScalarFieldEnum
+    having?: AlertScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AlertCountAggregateInputType | true
+    _min?: AlertMinAggregateInputType
+    _max?: AlertMaxAggregateInputType
+  }
+
+  export type AlertGroupByOutputType = {
+    id: string
+    createdAt: Date
+    userId: string
+    type: string
+    message: string
+    isRead: boolean
+    _count: AlertCountAggregateOutputType | null
+    _min: AlertMinAggregateOutputType | null
+    _max: AlertMaxAggregateOutputType | null
+  }
+
+  type GetAlertGroupByPayload<T extends AlertGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AlertGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AlertGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AlertGroupByOutputType[P]>
+            : GetScalarType<T[P], AlertGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AlertSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    userId?: boolean
+    type?: boolean
+    message?: boolean
+    isRead?: boolean
+  }, ExtArgs["result"]["alert"]>
+
+  export type AlertSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    userId?: boolean
+    type?: boolean
+    message?: boolean
+    isRead?: boolean
+  }, ExtArgs["result"]["alert"]>
+
+  export type AlertSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    userId?: boolean
+    type?: boolean
+    message?: boolean
+    isRead?: boolean
+  }, ExtArgs["result"]["alert"]>
+
+  export type AlertSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    userId?: boolean
+    type?: boolean
+    message?: boolean
+    isRead?: boolean
+  }
+
+  export type AlertOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "userId" | "type" | "message" | "isRead", ExtArgs["result"]["alert"]>
+
+  export type $AlertPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Alert"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      userId: string
+      type: string
+      message: string
+      isRead: boolean
+    }, ExtArgs["result"]["alert"]>
+    composites: {}
+  }
+
+  type AlertGetPayload<S extends boolean | null | undefined | AlertDefaultArgs> = $Result.GetResult<Prisma.$AlertPayload, S>
+
+  type AlertCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AlertFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AlertCountAggregateInputType | true
+    }
+
+  export interface AlertDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Alert'], meta: { name: 'Alert' } }
+    /**
+     * Find zero or one Alert that matches the filter.
+     * @param {AlertFindUniqueArgs} args - Arguments to find a Alert
+     * @example
+     * // Get one Alert
+     * const alert = await prisma.alert.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AlertFindUniqueArgs>(args: SelectSubset<T, AlertFindUniqueArgs<ExtArgs>>): Prisma__AlertClient<$Result.GetResult<Prisma.$AlertPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Alert that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AlertFindUniqueOrThrowArgs} args - Arguments to find a Alert
+     * @example
+     * // Get one Alert
+     * const alert = await prisma.alert.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AlertFindUniqueOrThrowArgs>(args: SelectSubset<T, AlertFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AlertClient<$Result.GetResult<Prisma.$AlertPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Alert that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AlertFindFirstArgs} args - Arguments to find a Alert
+     * @example
+     * // Get one Alert
+     * const alert = await prisma.alert.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AlertFindFirstArgs>(args?: SelectSubset<T, AlertFindFirstArgs<ExtArgs>>): Prisma__AlertClient<$Result.GetResult<Prisma.$AlertPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Alert that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AlertFindFirstOrThrowArgs} args - Arguments to find a Alert
+     * @example
+     * // Get one Alert
+     * const alert = await prisma.alert.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AlertFindFirstOrThrowArgs>(args?: SelectSubset<T, AlertFindFirstOrThrowArgs<ExtArgs>>): Prisma__AlertClient<$Result.GetResult<Prisma.$AlertPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Alerts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AlertFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Alerts
+     * const alerts = await prisma.alert.findMany()
+     * 
+     * // Get first 10 Alerts
+     * const alerts = await prisma.alert.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const alertWithIdOnly = await prisma.alert.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AlertFindManyArgs>(args?: SelectSubset<T, AlertFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AlertPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Alert.
+     * @param {AlertCreateArgs} args - Arguments to create a Alert.
+     * @example
+     * // Create one Alert
+     * const Alert = await prisma.alert.create({
+     *   data: {
+     *     // ... data to create a Alert
+     *   }
+     * })
+     * 
+     */
+    create<T extends AlertCreateArgs>(args: SelectSubset<T, AlertCreateArgs<ExtArgs>>): Prisma__AlertClient<$Result.GetResult<Prisma.$AlertPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Alerts.
+     * @param {AlertCreateManyArgs} args - Arguments to create many Alerts.
+     * @example
+     * // Create many Alerts
+     * const alert = await prisma.alert.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AlertCreateManyArgs>(args?: SelectSubset<T, AlertCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Alerts and returns the data saved in the database.
+     * @param {AlertCreateManyAndReturnArgs} args - Arguments to create many Alerts.
+     * @example
+     * // Create many Alerts
+     * const alert = await prisma.alert.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Alerts and only return the `id`
+     * const alertWithIdOnly = await prisma.alert.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AlertCreateManyAndReturnArgs>(args?: SelectSubset<T, AlertCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AlertPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Alert.
+     * @param {AlertDeleteArgs} args - Arguments to delete one Alert.
+     * @example
+     * // Delete one Alert
+     * const Alert = await prisma.alert.delete({
+     *   where: {
+     *     // ... filter to delete one Alert
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AlertDeleteArgs>(args: SelectSubset<T, AlertDeleteArgs<ExtArgs>>): Prisma__AlertClient<$Result.GetResult<Prisma.$AlertPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Alert.
+     * @param {AlertUpdateArgs} args - Arguments to update one Alert.
+     * @example
+     * // Update one Alert
+     * const alert = await prisma.alert.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AlertUpdateArgs>(args: SelectSubset<T, AlertUpdateArgs<ExtArgs>>): Prisma__AlertClient<$Result.GetResult<Prisma.$AlertPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Alerts.
+     * @param {AlertDeleteManyArgs} args - Arguments to filter Alerts to delete.
+     * @example
+     * // Delete a few Alerts
+     * const { count } = await prisma.alert.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AlertDeleteManyArgs>(args?: SelectSubset<T, AlertDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Alerts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AlertUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Alerts
+     * const alert = await prisma.alert.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AlertUpdateManyArgs>(args: SelectSubset<T, AlertUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Alerts and returns the data updated in the database.
+     * @param {AlertUpdateManyAndReturnArgs} args - Arguments to update many Alerts.
+     * @example
+     * // Update many Alerts
+     * const alert = await prisma.alert.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Alerts and only return the `id`
+     * const alertWithIdOnly = await prisma.alert.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AlertUpdateManyAndReturnArgs>(args: SelectSubset<T, AlertUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AlertPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Alert.
+     * @param {AlertUpsertArgs} args - Arguments to update or create a Alert.
+     * @example
+     * // Update or create a Alert
+     * const alert = await prisma.alert.upsert({
+     *   create: {
+     *     // ... data to create a Alert
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Alert we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AlertUpsertArgs>(args: SelectSubset<T, AlertUpsertArgs<ExtArgs>>): Prisma__AlertClient<$Result.GetResult<Prisma.$AlertPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Alerts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AlertCountArgs} args - Arguments to filter Alerts to count.
+     * @example
+     * // Count the number of Alerts
+     * const count = await prisma.alert.count({
+     *   where: {
+     *     // ... the filter for the Alerts we want to count
+     *   }
+     * })
+    **/
+    count<T extends AlertCountArgs>(
+      args?: Subset<T, AlertCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AlertCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Alert.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AlertAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AlertAggregateArgs>(args: Subset<T, AlertAggregateArgs>): Prisma.PrismaPromise<GetAlertAggregateType<T>>
+
+    /**
+     * Group by Alert.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AlertGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AlertGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AlertGroupByArgs['orderBy'] }
+        : { orderBy?: AlertGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AlertGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAlertGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Alert model
+   */
+  readonly fields: AlertFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Alert.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AlertClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Alert model
+   */
+  interface AlertFieldRefs {
+    readonly id: FieldRef<"Alert", 'String'>
+    readonly createdAt: FieldRef<"Alert", 'DateTime'>
+    readonly userId: FieldRef<"Alert", 'String'>
+    readonly type: FieldRef<"Alert", 'String'>
+    readonly message: FieldRef<"Alert", 'String'>
+    readonly isRead: FieldRef<"Alert", 'Boolean'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Alert findUnique
+   */
+  export type AlertFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Alert
+     */
+    select?: AlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Alert
+     */
+    omit?: AlertOmit<ExtArgs> | null
+    /**
+     * Filter, which Alert to fetch.
+     */
+    where: AlertWhereUniqueInput
+  }
+
+  /**
+   * Alert findUniqueOrThrow
+   */
+  export type AlertFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Alert
+     */
+    select?: AlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Alert
+     */
+    omit?: AlertOmit<ExtArgs> | null
+    /**
+     * Filter, which Alert to fetch.
+     */
+    where: AlertWhereUniqueInput
+  }
+
+  /**
+   * Alert findFirst
+   */
+  export type AlertFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Alert
+     */
+    select?: AlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Alert
+     */
+    omit?: AlertOmit<ExtArgs> | null
+    /**
+     * Filter, which Alert to fetch.
+     */
+    where?: AlertWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Alerts to fetch.
+     */
+    orderBy?: AlertOrderByWithRelationInput | AlertOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Alerts.
+     */
+    cursor?: AlertWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Alerts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Alerts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Alerts.
+     */
+    distinct?: AlertScalarFieldEnum | AlertScalarFieldEnum[]
+  }
+
+  /**
+   * Alert findFirstOrThrow
+   */
+  export type AlertFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Alert
+     */
+    select?: AlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Alert
+     */
+    omit?: AlertOmit<ExtArgs> | null
+    /**
+     * Filter, which Alert to fetch.
+     */
+    where?: AlertWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Alerts to fetch.
+     */
+    orderBy?: AlertOrderByWithRelationInput | AlertOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Alerts.
+     */
+    cursor?: AlertWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Alerts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Alerts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Alerts.
+     */
+    distinct?: AlertScalarFieldEnum | AlertScalarFieldEnum[]
+  }
+
+  /**
+   * Alert findMany
+   */
+  export type AlertFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Alert
+     */
+    select?: AlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Alert
+     */
+    omit?: AlertOmit<ExtArgs> | null
+    /**
+     * Filter, which Alerts to fetch.
+     */
+    where?: AlertWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Alerts to fetch.
+     */
+    orderBy?: AlertOrderByWithRelationInput | AlertOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Alerts.
+     */
+    cursor?: AlertWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Alerts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Alerts.
+     */
+    skip?: number
+    distinct?: AlertScalarFieldEnum | AlertScalarFieldEnum[]
+  }
+
+  /**
+   * Alert create
+   */
+  export type AlertCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Alert
+     */
+    select?: AlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Alert
+     */
+    omit?: AlertOmit<ExtArgs> | null
+    /**
+     * The data needed to create a Alert.
+     */
+    data: XOR<AlertCreateInput, AlertUncheckedCreateInput>
+  }
+
+  /**
+   * Alert createMany
+   */
+  export type AlertCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Alerts.
+     */
+    data: AlertCreateManyInput | AlertCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Alert createManyAndReturn
+   */
+  export type AlertCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Alert
+     */
+    select?: AlertSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Alert
+     */
+    omit?: AlertOmit<ExtArgs> | null
+    /**
+     * The data used to create many Alerts.
+     */
+    data: AlertCreateManyInput | AlertCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Alert update
+   */
+  export type AlertUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Alert
+     */
+    select?: AlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Alert
+     */
+    omit?: AlertOmit<ExtArgs> | null
+    /**
+     * The data needed to update a Alert.
+     */
+    data: XOR<AlertUpdateInput, AlertUncheckedUpdateInput>
+    /**
+     * Choose, which Alert to update.
+     */
+    where: AlertWhereUniqueInput
+  }
+
+  /**
+   * Alert updateMany
+   */
+  export type AlertUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Alerts.
+     */
+    data: XOR<AlertUpdateManyMutationInput, AlertUncheckedUpdateManyInput>
+    /**
+     * Filter which Alerts to update
+     */
+    where?: AlertWhereInput
+    /**
+     * Limit how many Alerts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Alert updateManyAndReturn
+   */
+  export type AlertUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Alert
+     */
+    select?: AlertSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Alert
+     */
+    omit?: AlertOmit<ExtArgs> | null
+    /**
+     * The data used to update Alerts.
+     */
+    data: XOR<AlertUpdateManyMutationInput, AlertUncheckedUpdateManyInput>
+    /**
+     * Filter which Alerts to update
+     */
+    where?: AlertWhereInput
+    /**
+     * Limit how many Alerts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Alert upsert
+   */
+  export type AlertUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Alert
+     */
+    select?: AlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Alert
+     */
+    omit?: AlertOmit<ExtArgs> | null
+    /**
+     * The filter to search for the Alert to update in case it exists.
+     */
+    where: AlertWhereUniqueInput
+    /**
+     * In case the Alert found by the `where` argument doesn't exist, create a new Alert with this data.
+     */
+    create: XOR<AlertCreateInput, AlertUncheckedCreateInput>
+    /**
+     * In case the Alert was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AlertUpdateInput, AlertUncheckedUpdateInput>
+  }
+
+  /**
+   * Alert delete
+   */
+  export type AlertDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Alert
+     */
+    select?: AlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Alert
+     */
+    omit?: AlertOmit<ExtArgs> | null
+    /**
+     * Filter which Alert to delete.
+     */
+    where: AlertWhereUniqueInput
+  }
+
+  /**
+   * Alert deleteMany
+   */
+  export type AlertDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Alerts to delete
+     */
+    where?: AlertWhereInput
+    /**
+     * Limit how many Alerts to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Alert without action
+   */
+  export type AlertDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Alert
+     */
+    select?: AlertSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Alert
+     */
+    omit?: AlertOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Model SpiralReference
    */
 
@@ -7711,6 +8810,18 @@ export namespace Prisma {
   export type CheckInScalarFieldEnum = (typeof CheckInScalarFieldEnum)[keyof typeof CheckInScalarFieldEnum]
 
 
+  export const AlertScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    userId: 'userId',
+    type: 'type',
+    message: 'message',
+    isRead: 'isRead'
+  };
+
+  export type AlertScalarFieldEnum = (typeof AlertScalarFieldEnum)[keyof typeof AlertScalarFieldEnum]
+
+
   export const SpiralReferenceScalarFieldEnum: {
     id: 'id',
     type: 'type',
@@ -8186,6 +9297,63 @@ export namespace Prisma {
     notes?: StringNullableWithAggregatesFilter<"CheckIn"> | string | null
   }
 
+  export type AlertWhereInput = {
+    AND?: AlertWhereInput | AlertWhereInput[]
+    OR?: AlertWhereInput[]
+    NOT?: AlertWhereInput | AlertWhereInput[]
+    id?: StringFilter<"Alert"> | string
+    createdAt?: DateTimeFilter<"Alert"> | Date | string
+    userId?: StringFilter<"Alert"> | string
+    type?: StringFilter<"Alert"> | string
+    message?: StringFilter<"Alert"> | string
+    isRead?: BoolFilter<"Alert"> | boolean
+  }
+
+  export type AlertOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    message?: SortOrder
+    isRead?: SortOrder
+  }
+
+  export type AlertWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: AlertWhereInput | AlertWhereInput[]
+    OR?: AlertWhereInput[]
+    NOT?: AlertWhereInput | AlertWhereInput[]
+    createdAt?: DateTimeFilter<"Alert"> | Date | string
+    userId?: StringFilter<"Alert"> | string
+    type?: StringFilter<"Alert"> | string
+    message?: StringFilter<"Alert"> | string
+    isRead?: BoolFilter<"Alert"> | boolean
+  }, "id">
+
+  export type AlertOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    message?: SortOrder
+    isRead?: SortOrder
+    _count?: AlertCountOrderByAggregateInput
+    _max?: AlertMaxOrderByAggregateInput
+    _min?: AlertMinOrderByAggregateInput
+  }
+
+  export type AlertScalarWhereWithAggregatesInput = {
+    AND?: AlertScalarWhereWithAggregatesInput | AlertScalarWhereWithAggregatesInput[]
+    OR?: AlertScalarWhereWithAggregatesInput[]
+    NOT?: AlertScalarWhereWithAggregatesInput | AlertScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Alert"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Alert"> | Date | string
+    userId?: StringWithAggregatesFilter<"Alert"> | string
+    type?: StringWithAggregatesFilter<"Alert"> | string
+    message?: StringWithAggregatesFilter<"Alert"> | string
+    isRead?: BoolWithAggregatesFilter<"Alert"> | boolean
+  }
+
   export type SpiralReferenceWhereInput = {
     AND?: SpiralReferenceWhereInput | SpiralReferenceWhereInput[]
     OR?: SpiralReferenceWhereInput[]
@@ -8592,6 +9760,69 @@ export namespace Prisma {
     mood?: IntFieldUpdateOperationsInput | number
     stressLevel?: NullableIntFieldUpdateOperationsInput | number | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type AlertCreateInput = {
+    id?: string
+    createdAt?: Date | string
+    userId: string
+    type: string
+    message: string
+    isRead?: boolean
+  }
+
+  export type AlertUncheckedCreateInput = {
+    id?: string
+    createdAt?: Date | string
+    userId: string
+    type: string
+    message: string
+    isRead?: boolean
+  }
+
+  export type AlertUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type AlertUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type AlertCreateManyInput = {
+    id?: string
+    createdAt?: Date | string
+    userId: string
+    type: string
+    message: string
+    isRead?: boolean
+  }
+
+  export type AlertUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type AlertUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type SpiralReferenceCreateInput = {
@@ -9134,6 +10365,33 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type AlertCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    message?: SortOrder
+    isRead?: SortOrder
+  }
+
+  export type AlertMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    message?: SortOrder
+    isRead?: SortOrder
+  }
+
+  export type AlertMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    message?: SortOrder
+    isRead?: SortOrder
   }
 
   export type EnumRefTypeFilter<$PrismaModel = never> = {

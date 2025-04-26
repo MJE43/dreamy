@@ -4,38 +4,35 @@ import { PrismaClient, RefType } from '@/generated/prisma'; // Use correct impor
 
 const prisma = new PrismaClient();
 
-// Interface for the data structure expected within the raw JSON 'details.choices' field
-interface PrismaDilemmaChoice {
-  option?: unknown;
-  text?: unknown;
-  score?: unknown;
-}
-
-// Define the specific structure for choices within DilemmaForQuiz
-type DilemmaQuizChoice = {
+// Define the specific structure for choices within the fetched dilemma details
+interface DilemmaQuizChoice {
   option: string;
   text: string;
-  score?: string;
-};
-
-// Interface for the formatted dilemma data returned by the action
-export interface DilemmaForQuiz {
-  id: string;
-  code: string;
-  name: string;
-  description: string;
-  details?: {
-    choices?: DilemmaQuizChoice[];
-  } | null;
+  score?: string; // Score is optional and a string based on mapping logic
 }
 
-export async function fetchDilemmas(): Promise<DilemmaForQuiz[]> {
+// Define the structure for the choice part of an answer (exported as requested)
+export interface DilemmaChoice {
+  category: string;
+  score: number;
+}
+
+// Define the structure for a dilemma fetched for the quiz based on actual data
+interface DilemmaQuizData {
+  id: number; // Prisma ID is a number
+  code: string;
+  name: string;
+  description: string | null;
+  details: { // Details object structure
+    choices: DilemmaQuizChoice[];
+  } | null; // Details can be null
+}
+
+export async function fetchDilemmas(): Promise<DilemmaQuizData[]> { // Update return type
   try {
     const dilemmas = await prisma.spiralReference.findMany({
       where: { type: RefType.DILEMMA },
       take: 10,
-      // Optionally add randomness later: orderBy: { /* Need a way to order randomly if desired */ }
-      // For now, order by code for predictability
       orderBy: { code: 'asc' },
       select: {
         id: true,
@@ -46,37 +43,38 @@ export async function fetchDilemmas(): Promise<DilemmaForQuiz[]> {
       },
     });
 
-    // Process the details field (JsonValue | null) safely
-    const formattedDilemmas = dilemmas.map((d): DilemmaForQuiz => {
-      // Define the type for the choices array we are building for the final output
+    // Process the details field safely
+    const formattedDilemmas: DilemmaQuizData[] = dilemmas.map((d): DilemmaQuizData => { // Update mapping return type
       const choicesForQuiz: DilemmaQuizChoice[] = [];
 
-      // Type guard to check if details is an object and has choices array
+      // Type guard for details and choices array
       if (
         d.details &&
         typeof d.details === 'object' &&
         'choices' in d.details &&
-        Array.isArray(d.details.choices)
+        Array.isArray((d.details as any).choices) // Use 'any' briefly for type guard
       ) {
-        // Iterate over raw choices, asserting the expected structure from JSON
-        (d.details.choices as PrismaDilemmaChoice[]).forEach(c => {
-          // Validate structure and types before adding to the formatted array
-          if (typeof c.option === 'string' && typeof c.text === 'string') {
+        // Iterate over raw choices, assuming structure based on PrismaDilemmaChoice logic
+        ((d.details as any).choices).forEach((c: any) => { // Use 'any' for raw choice iteration
+          // Validate structure and types before adding
+          if (c && typeof c.option === 'string' && typeof c.text === 'string') {
             choicesForQuiz.push({
               option: c.option,
               text: c.text,
+              // Score is optional and kept as string if present
               score: typeof c.score === 'string' ? c.score : undefined,
             });
           }
         });
       }
 
-      // Explicitly return type DilemmaForQuiz
-      const result: DilemmaForQuiz = {
-        id: d.id,
+      // Construct the final DilemmaQuizData object
+      const result: DilemmaQuizData = {
+        id: d.id, // Keep as number
         code: d.code,
         name: d.name,
         description: d.description,
+        // Only include details if choices were successfully parsed
         details: choicesForQuiz.length > 0 ? { choices: choicesForQuiz } : null,
       };
       return result;
@@ -85,7 +83,6 @@ export async function fetchDilemmas(): Promise<DilemmaForQuiz[]> {
     return formattedDilemmas;
   } catch (error) {
     console.error("Error fetching dilemmas:", error);
-    // In a real app, handle this more gracefully (e.g., throw specific error)
     return [];
   }
 } 

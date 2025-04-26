@@ -1,15 +1,12 @@
 import { createSupabaseServerClient } from '@/lib/supabase';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { PrismaClient, Prisma } from "@/generated/prisma";
-import { MoodData, MotifData, RecentDream } from "@/types";
+import { PrismaClient } from "@/generated/prisma";
+import { RecentDream } from "@/types";
 import DashboardClient from "./DashboardClient";
 
-type StageBlend = Prisma.JsonValue | null;
-
 export default async function Page() {
-  // Restore original logic
-
+  // --- Supabase Auth Check ---
   const cookieStore = await cookies();
   const supabase = createSupabaseServerClient(cookieStore);
   const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -22,14 +19,22 @@ export default async function Page() {
   
   const prisma = new PrismaClient();
   
-  // Fetch SpiralProfile
+  // --- Check if Onboarding is Complete --- 
   const spiralProfile = await prisma.spiralProfile.findUnique({
     where: { userId: userId },
-    select: { stageBlend: true }
+    select: { stageBlend: true, dominantBias: true }
   });
-  const stageBlendData: StageBlend = spiralProfile?.stageBlend ?? null;
-  
-  // Fetch Recent Dreams
+
+  // If no profile or no stageBlend, redirect to onboarding
+  if (!spiralProfile || !spiralProfile.stageBlend) {
+    console.log(`User ${userId} hasn't completed onboarding. Redirecting...`);
+    redirect('/onboarding/step-1');
+  }
+
+  // --- Onboarding Complete: Fetch Dashboard Data --- 
+  console.log(`User ${userId} has completed onboarding. Fetching dashboard data...`);
+
+  // Fetch Recent Dreams (Only fetch needed for dashboard)
   const recentDreams: RecentDream[] = await prisma.dream.findMany({
     where: { userId: userId },
     orderBy: { createdAt: 'desc' },
@@ -40,50 +45,11 @@ export default async function Page() {
     }
   });
   
-  // Fetch Mood Data
-  const moodDataRaw = await prisma.dream.findMany({
-    where: { userId: userId },
-    orderBy: { createdAt: 'asc' },
-    take: 30,
-    select: { createdAt: true, mood: true }
-  });
-  const moodData: MoodData[] = moodDataRaw.map(dream => ({
-    date: new Date(dream.createdAt).toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' }),
-    mood: dream.mood,
-  }));
-  
-  // Fetch Tags for Motif Cloud
-  const allDreamsForTags = await prisma.dream.findMany({
-    where: { userId: userId },
-    select: { tags: true }
-  });
-  
-  // Keep helper function for motifs
-  function getTopMotifs(dreams: { tags: string[] | null }[], count: number): MotifData[] {
-    const tagCounts: { [key: string]: number } = {};
-    dreams.forEach(dream => {
-      if (dream.tags) {
-        dream.tags.forEach(tag => {
-          const trimmedTag = tag.trim().toLowerCase();
-          if (trimmedTag) {
-            tagCounts[trimmedTag] = (tagCounts[trimmedTag] || 0) + 1;
-          }
-        });
-      }
-    });
-    return Object.entries(tagCounts)
-      .map(([tag, count]) => ({ tag, count }))
-      .sort((a, b) => b.count - a.count)
-      .slice(0, count);
-  }
-  const topMotifs: MotifData[] = getTopMotifs(allDreamsForTags, 15);
-  
   return (
     <DashboardClient
       initialDreams={recentDreams}
-      initialMoodData={moodData}
-      initialTopMotifs={topMotifs}
-      initialStageBlend={stageBlendData}
+      initialStageBlend={spiralProfile.stageBlend}
+      initialDominantBias={spiralProfile.dominantBias}
     />
   );
 

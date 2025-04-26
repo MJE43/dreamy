@@ -41,6 +41,19 @@ const AnalysisSection = ({ title, children }: { title: string, children: React.R
   </div>
 );
 
+// Helper function to render tags
+// Update parameter type to string[] | null
+const renderTags = (tags: string[] | null) => { 
+  // Check if tags array is null or empty
+  if (!tags || tags.length === 0) { 
+    return <span className="text-sm text-muted-foreground">No tags.</span>;
+  }
+  // Iterate directly over the array, filter empty strings just in case
+  return tags.map(tag => tag?.trim()).filter(Boolean).map(tag => ( 
+    <Badge key={tag} variant="secondary" className="mr-1 mb-1">{tag}</Badge>
+  ));
+};
+
 // This is a Server Component by default in the App Router
 export default async function DreamPage({ params }: DreamIdPageProps) {
   // --- Supabase Auth Check ---
@@ -97,13 +110,6 @@ export default async function DreamPage({ params }: DreamIdPageProps) {
       structuredAnalysis = null; // Ensure it's null if parsing fails
     }
   }
-
-  const renderTags = (tagsString: string | null) => {
-    if (!tagsString) return <span className="text-sm text-muted-foreground">No tags.</span>;
-    return tagsString.split(',').map(tag => tag.trim()).filter(Boolean).map(tag => (
-      <Badge key={tag} variant="secondary" className="mr-1 mb-1">{tag}</Badge>
-    ));
-  };
 
   return (
     <div className="container mx-auto p-4 md:p-8">

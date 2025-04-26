@@ -76,6 +76,20 @@ model CheckIn {
   @@index([userId])
 }
 
+// Add the new Alert model
+model Alert {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  userId    String               // Which user this alert is for
+  type      String               // e.g., "mood_dip", "sleep_disruption", "goal_risk"
+  message   String               // Description of the alert
+  isRead    Boolean  @default(false) // Has the user seen this alert?
+  // Optional: Add relation to Goal or CheckIn if needed
+
+  @@index([userId, createdAt]) // Index for fetching user alerts
+  @@index([userId, isRead])    // Index for fetching unread alerts
+}
+
 /* ──────────── NEW TABLE FOR SPIRAL DYNAMICS REFERENCE DATA ──────────── */
 
 enum RefType {

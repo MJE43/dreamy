@@ -55,6 +55,30 @@
   --color-primary-950: var(--primary-950);
   --color-primary: var(--primary-500);
   /* Default primary to 500 */
+  --color-orange-50: var(--orange-50);
+    --color-orange-100: var(--orange-100);
+    --color-orange-200: var(--orange-200);
+    --color-orange-300: var(--orange-300);
+    --color-orange-400: var(--orange-400);
+    --color-orange-500: var(--orange-500);
+    --color-orange-600: var(--orange-600);
+    --color-orange-700: var(--orange-700);
+    --color-orange-800: var(--orange-800);
+    --color-orange-900: var(--orange-900);
+    --color-orange-950: var(--orange-950);
+    /* Default primary to 500 */
+    --primary-foreground: #ffffff;
+    /* White text on primary */
+  
+    /* v0 Gradients */
+    --gradient-light-from: #f3e8ff;
+    /* purple-50 */
+    --gradient-light-to: #e0e7ff;
+    /* indigo-50 */
+    --gradient-dark-from: #0f172a;
+    /* slate-950 */
+    --gradient-dark-to: #3730a3;
+    /* indigo-950 - adjusted from v0 purple-950 for better blend */
 }
 
 :root {
@@ -74,7 +98,7 @@
     --destructive: #ef4444;
     --border: #e5e7eb;
     --input: #e5e7eb;
-    --ring: #a78bfa;
+    --ring: #f97316;
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -101,7 +125,7 @@
   --primary-800: #5b21b6;
   --primary-900: #4c1d95;
   --primary-950: #2e1065;
-  --primary: var(--primary-500);
+  --primary: var(--orange-600);
   /* Default primary */
   --primary-foreground: #ffffff;
   /* White text on primary */
@@ -133,7 +157,7 @@
     --destructive: #ef4444;
     --border: #334155;
     --input: #334155;
-    --ring: #8b5cf6;
+    --ring: var(--orange-500);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
@@ -161,7 +185,7 @@
   --primary-800: #5b21b6;
   --primary-900: #4c1d95;
   --primary-950: #2e1065;
-  --primary: var(--primary-400);
+  --primary: var(--orange-500);
   /* Lighter primary for dark mode */
   --primary-foreground: #ffffff;
   /* White text on primary */

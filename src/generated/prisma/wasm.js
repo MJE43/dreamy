@@ -166,6 +166,15 @@ exports.Prisma.CheckInScalarFieldEnum = {
   notes: 'notes'
 };
 
+exports.Prisma.AlertScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  userId: 'userId',
+  type: 'type',
+  message: 'message',
+  isRead: 'isRead'
+};
+
 exports.Prisma.SpiralReferenceScalarFieldEnum = {
   id: 'id',
   type: 'type',
@@ -216,6 +225,7 @@ exports.Prisma.ModelName = {
   SpiralProfile: 'SpiralProfile',
   Goal: 'Goal',
   CheckIn: 'CheckIn',
+  Alert: 'Alert',
   SpiralReference: 'SpiralReference'
 };
 
