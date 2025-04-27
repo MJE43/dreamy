@@ -13,7 +13,7 @@ export default function CoachPreviewCard() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (draft.trim()) {
-      router.push(`/coach?draft=${encodeURIComponent(draft.trim())}`);
+      router.push(`/coach?message=${encodeURIComponent(draft.trim())}`);
     }
   };
 
@@ -28,13 +28,26 @@ export default function CoachPreviewCard() {
         </p>
       </CardContent>
       <CardFooter>
-        <form onSubmit={handleSubmit} className="flex w-full items-center gap-2">
+        <form
+          onSubmit={handleSubmit}
+          className="flex w-full items-center gap-2"
+        >
           <Textarea
             value={draft}
-            onChange={e => setDraft(e.target.value)}
+            onChange={(e) => setDraft(e.target.value)}
             placeholder="Type to continue chatting..."
             rows={2}
             className="flex-1 resize-none text-sm"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                if (draft.trim()) {
+                  handleSubmit(
+                    e as unknown as React.FormEvent<HTMLFormElement>
+                  );
+                }
+              }
+            }}
           />
           <Button type="submit" disabled={!draft.trim()}>
             Go

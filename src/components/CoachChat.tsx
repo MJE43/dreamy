@@ -54,8 +54,10 @@ const formatDate = (date: Date) => {
 // Wrap the main component logic in a new component to use Suspense
 const CoachChatContent: React.FC = () => {
   const searchParams = useSearchParams();
-  const initialMessage = searchParams.get("message") || "";
+  // Read 'message' instead of 'draft'
+  const initialMessageFromUrl = searchParams.get("message") || "";
 
+  const [firstRender, setFirstRender] = useState(true);
   const [feedbackGiven, setFeedbackGiven] = useState<
     Record<string, "up" | "down" | null>
   >({});
@@ -80,6 +82,7 @@ const CoachChatContent: React.FC = () => {
     error,
     stop,
     reload,
+    setInput, // Get setInput from useChat to manually clear input after programmatic submit
   } = useChat({
     api: "/api/coach",
     initialMessages: [
@@ -90,22 +93,79 @@ const CoachChatContent: React.FC = () => {
         createdAt: new Date(),
       },
     ],
-    initialInput: initialMessage, // Use derived initialMessage
+    initialInput: initialMessageFromUrl, // Use derived initialMessage
     onFinish: () => {
       scrollToBottom(); // Now defined
     },
   });
 
+  // Programmatically submit the initial message from URL on mount
+  useEffect(() => {
+    // Only run if there is an initial message from the URL
+    // and we are in the initial state (only greeting message exists)
+    // and not currently loading.
+    if (
+      initialMessageFromUrl &&
+      messages.length === 1 &&
+      !isLoading &&
+      textareaRef.current
+    ) {
+      console.log(
+        "Submitting initial message from URL:",
+        initialMessageFromUrl
+      );
+
+      // Simulate form submission
+      const fakeForm = document.createElement("form");
+      const fakeEvent = new Event("submit", {
+        cancelable: true,
+        bubbles: true,
+      });
+      // React expects these properties for synthetic events
+      Object.defineProperty(fakeEvent, "target", {
+        writable: false,
+        value: fakeForm,
+      });
+      Object.defineProperty(fakeEvent, "currentTarget", {
+        writable: false,
+        value: fakeForm,
+      });
+
+      handleSubmit(fakeEvent as unknown as React.FormEvent<HTMLFormElement>);
+
+      // Clear the input state in useChat after programmatic submission
+      // This prevents the user seeing their message duplicated in the input
+      // Needs a slight delay to ensure submit has processed
+      setTimeout(() => {
+        setInput("");
+        if (textareaRef.current) {
+          textareaRef.current.value = "";
+          textareaRef.current.style.height = "auto"; // Reset height
+        }
+      }, 50);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialMessageFromUrl]); // Run only when the initial message from URL changes (effectively once on load)
+
   useEffect(() => {
     scrollToBottom();
   }, [messages.length, scrollToBottom]);
 
-  // Auto-focus textarea on initial mount
+  // Auto-focus textarea when initialMessage is provided or on first render
   useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.focus();
+    // Focus logic might need adjustment depending on programmatic submit timing
+    if (
+      (initialMessageFromUrl || firstRender) &&
+      textareaRef.current &&
+      !isLoading
+    ) {
+      // Don't focus immediately if we are programmatically submitting
+      if (!initialMessageFromUrl || messages.length > 1) {
+        textareaRef.current.focus();
+      }
+      setFirstRender(false);
     }
-  }, []);
+  }, [initialMessageFromUrl, firstRender, isLoading, messages.length]); // Added dependencies
 
   // Auto-resize textarea as user types
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -448,10 +508,13 @@ const CoachChatContent: React.FC = () => {
               disabled={isLoading}
               className="flex-grow resize-none min-h-[56px] max-h-[200px] text-base rounded-xl border-input shadow-sm pr-14 py-3.5 px-4"
               onKeyDown={(e) => {
+                // Check if Enter is pressed without Shift
                 if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
+                  e.preventDefault(); // Prevent newline
+                  // Trigger submit if input is not empty
                   if (input.trim()) {
                     handleSubmit(
+                      // Cast event type as FormEvent for handleSubmit
                       e as unknown as React.FormEvent<HTMLFormElement>
                     );
                   }

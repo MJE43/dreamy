@@ -93,8 +93,6 @@ Your ultimate goal is to help users develop greater self-awareness, increase the
           .replace('{{SABOTAGE_LIST_OR_NONE}}', sabotageList)
           .replace('{{DREAM_BULLET_SNIPPETS}}', dreamSnippets);
 
-        console.log(`Coach System Prompt for ${userId}:`, systemPrompt);
-
         // --- Call Vercel AI SDK streamText --- 
         const result = await streamText({
             model: google('gemini-2.0-flash'),
