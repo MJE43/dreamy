@@ -16,14 +16,15 @@ datasource db {
 }
 
 model Dream {
-  id          String    @id @default(cuid())
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  description String
-  mood        Int // Add mood (e.g., 1-5)
-  tags        String[] // ⬅︎ switched from delimited string → Postgres text[]
-  userId      String // This will store the Supabase Auth user UUID
-  analysis    Analysis? // A dream can have zero or one analysis
+  id             String    @id @default(cuid())
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  description    String
+  mood           Int // Add mood (e.g., 1-5)
+  tags           String[] // ⬅︎ switched from delimited string → Postgres text[]
+  summaryBullets String? // New: newline-separated markdown bullets summarizing the dream
+  userId         String // This will store the Supabase Auth user UUID
+  analysis       Analysis? // A dream can have zero or one analysis
 
   @@index([userId])
 }

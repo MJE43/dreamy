@@ -18,7 +18,8 @@ export interface DilemmaChoice {
 }
 
 // Define the structure for a dilemma fetched for the quiz based on actual data
-interface DilemmaQuizData {
+// Rename DilemmaQuizData to DilemmaForQuiz and export it
+export interface DilemmaForQuiz { // Renamed from DilemmaQuizData and exported
   id: number; // Prisma ID is a number
   code: string;
   name: string;
@@ -28,7 +29,26 @@ interface DilemmaQuizData {
   } | null; // Details can be null
 }
 
-export async function fetchDilemmas(): Promise<DilemmaQuizData[]> { // Update return type
+// Interface for the expected structure within the Prisma 'details' JsonValue
+interface PrismaDilemmaDetails {
+  choices: Array<{
+    option?: unknown; // Use unknown first
+    text?: unknown;
+    score?: unknown;
+  }>;
+}
+
+// Helper type guard to check if an object has the expected details structure
+function hasDilemmaDetails(details: unknown): details is PrismaDilemmaDetails {
+  return (
+    details != null &&
+    typeof details === 'object' &&
+    'choices' in details && // Check for 'choices' property existence
+    Array.isArray((details as { choices: unknown }).choices) // Then safely check if it's an array
+  );
+}
+
+export async function fetchDilemmas(): Promise<DilemmaForQuiz[]> { // Update return type
   try {
     const dilemmas = await prisma.spiralReference.findMany({
       where: { type: RefType.DILEMMA },
@@ -44,20 +64,21 @@ export async function fetchDilemmas(): Promise<DilemmaQuizData[]> { // Update re
     });
 
     // Process the details field safely
-    const formattedDilemmas: DilemmaQuizData[] = dilemmas.map((d): DilemmaQuizData => { // Update mapping return type
+    const formattedDilemmas: DilemmaForQuiz[] = dilemmas.map((d): DilemmaForQuiz => { // Update mapping return type
       const choicesForQuiz: DilemmaQuizChoice[] = [];
 
       // Type guard for details and choices array
-      if (
-        d.details &&
-        typeof d.details === 'object' &&
-        'choices' in d.details &&
-        Array.isArray((d.details as any).choices) // Use 'any' briefly for type guard
-      ) {
-        // Iterate over raw choices, assuming structure based on PrismaDilemmaChoice logic
-        ((d.details as any).choices).forEach((c: any) => { // Use 'any' for raw choice iteration
+      if (hasDilemmaDetails(d.details)) {
+        // Now TypeScript knows d.details matches PrismaDilemmaDetails
+        d.details.choices.forEach((c) => {
           // Validate structure and types before adding
-          if (c && typeof c.option === 'string' && typeof c.text === 'string') {
+          // Check individual properties are strings
+          if (
+            c &&
+            typeof c === 'object' && // Ensure c is an object before accessing properties
+            typeof c.option === 'string' &&
+            typeof c.text === 'string'
+          ) {
             choicesForQuiz.push({
               option: c.option,
               text: c.text,
@@ -68,9 +89,9 @@ export async function fetchDilemmas(): Promise<DilemmaQuizData[]> { // Update re
         });
       }
 
-      // Construct the final DilemmaQuizData object
-      const result: DilemmaQuizData = {
-        id: d.id, // Keep as number
+      // Construct the final DilemmaForQuiz object
+      const result: DilemmaForQuiz = {
+        id: Number(d.id), // Explicitly convert d.id to number
         code: d.code,
         name: d.name,
         description: d.description,

@@ -1,26 +1,13 @@
 import { NextResponse } from 'next/server'
 import { PrismaClient, Dream } from '@/generated/prisma'
 import * as z from 'zod'
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import { dreamAnalysisSchema, StructuredDreamAnalysis } from '@/lib/schemas/dreamAnalysis';
+import { google } from '@ai-sdk/google';
+import { generateText, generateObject } from 'ai';
+import { dreamAnalysisSchema, StructuredDreamAnalysis, structuredDreamAnalysisZodSchema } from '@/lib/schemas/dreamAnalysis';
 import { createSupabaseServerClient } from '@/lib/supabase';
 import { cookies } from 'next/headers';
 
 const prisma = new PrismaClient()
-
-// Initialize Google Generative AI
-// Make sure GOOGLE_API_KEY is set in your .env file
-if (!process.env.GOOGLE_API_KEY) {
-  console.warn("GOOGLE_API_KEY not set. Analysis feature will be disabled.");
-}
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "");
-const model = genAI.getGenerativeModel({
-    model: "gemini-1.5-flash",
-    generationConfig: {
-        responseMimeType: "application/json",
-        responseSchema: dreamAnalysisSchema
-    }
-});
 
 // Schema for validating incoming request body
 const ingestSchema = z.object({
@@ -124,6 +111,42 @@ export async function POST(request: Request) {
       },
     })
 
+    // 1b. Summarize the dream into concise markdown bullets for future context using Vercel AI SDK
+    let summaryBullets: string | null = null;
+    try {
+      const summaryPrompt = `ROLE: system
+You compress user dream logs.
+
+Instruction:
+Return 2-4 concise markdown bullets that capture:
+• main setting and actors
+• dominant emotions / conflicts
+• any striking symbols
+
+Do NOT interpret or analyze—just factual summary.
+
+Dream:
+"""
+${description.length > 2000 ? description.substring(0, 2000) : description}
+"""
+==>`;
+      const result = await generateText({
+        model: google('gemini-1.5-flash'),
+        prompt: summaryPrompt
+      });
+      summaryBullets = result.text.trim();
+    } catch (error) {
+      console.error(`Error generating dream summary for dream ${newDream.id}:`, error);
+    }
+
+    // Update the dream record with summaryBullets if available
+    if (summaryBullets) {
+      await prisma.dream.update({
+        where: { id: newDream.id },
+        data: { summaryBullets },
+      });
+    }
+
     let finalAnalysisString: string | null = null;
     let analysisValid = false;
 
@@ -161,56 +184,20 @@ export async function POST(request: Request) {
 
       // Build the prompt
       const prompt = buildPrompt(recentDreams, newDream);
-      // console.log(`\n--- Gemini Prompt for user ${userId} ---\n`, prompt, "\n---------------------\n");
 
-      // Call Gemini
+      // Call the AI SDK to generate structured analysis
       try {
-          const result = await model.generateContent(prompt);
-          const responseText = result.response.text();
-          // console.log(`\n--- Gemini Raw Response for user ${userId} ---\n`, responseText, "\n----------------------\n");
-
-          if (!responseText) {
-              console.error("Gemini response text is empty for user:", userId);
-              throw new Error("Generated analysis is empty.");
-          }
-
-          // Attempt to parse and validate the response
-          try {
-              const generatedAnalysis = JSON.parse(responseText) as StructuredDreamAnalysis;
-              if (!generatedAnalysis.summary || !generatedAnalysis.keySymbols || !generatedAnalysis.archetypes || !generatedAnalysis.emotionalThemes || !generatedAnalysis.guidedReflection) {
-                  console.warn("Gemini response missing required fields for user:", userId, generatedAnalysis);
-                  throw new Error("Generated analysis response is missing required fields.");
-              }
-              finalAnalysisString = responseText; // Store the valid JSON string
-              analysisValid = true;
-              console.log(`Successfully generated and validated analysis for user ${userId}`)
-          } catch (parseOrValidationError) {
-              console.error("Failed to parse or validate Gemini JSON response for user:", userId, parseOrValidationError, "Raw text:", responseText);
-              // Fallback: Attempt to extract from markdown
-              const jsonMatch = responseText.match(/```json\n([^\s\S]*?)\n```/);
-              if (jsonMatch && jsonMatch[1]) {
-                  try {
-                      const extractedAnalysis = JSON.parse(jsonMatch[1]) as StructuredDreamAnalysis;
-                      if (!extractedAnalysis.summary || !extractedAnalysis.keySymbols || !extractedAnalysis.archetypes || !extractedAnalysis.emotionalThemes || !extractedAnalysis.guidedReflection) {
-                           console.warn("Extracted Gemini response missing required fields for user:");
-                           throw new Error("Extracted analysis response is missing required fields.");
-                      }
-                      finalAnalysisString = jsonMatch[1]; // Store extracted valid JSON string
-                      analysisValid = true;
-                      console.warn("Used analysis extracted from markdown block for user:", userId);
-                  } catch (fallbackError) {
-                      console.error("Failed to parse/validate extracted JSON for user:", userId, fallbackError);
-                      analysisValid = false; // Failed validation
-                  }
-              } else {
-                  analysisValid = false; // Failed validation (no JSON found)
-              }
-          }
-
-      } catch (geminiError) {
-          console.error(`Error calling Gemini API or processing response for user ${userId}:`, geminiError);
-          analysisValid = false;
-          // Store error details maybe? For now, just mark as invalid.
+        const { object: generated } = await generateObject({
+          model: google('gemini-2.0-flash'),
+          schema: structuredDreamAnalysisZodSchema,
+          prompt,
+        });
+        finalAnalysisString = JSON.stringify(generated);
+        analysisValid = true;
+        console.log(`Successfully generated analysis for dream ${newDream.id}`);
+      } catch (analysisError) {
+        console.error(`Error generating analysis for dream ${newDream.id}:`, analysisError);
+        analysisValid = false;
       }
     } else {
         console.log(`Using valid pre-generated analysis for dream ${newDream.id} for user ${userId}.`)

@@ -124,6 +124,7 @@ exports.Prisma.DreamScalarFieldEnum = {
   description: 'description',
   mood: 'mood',
   tags: 'tags',
+  summaryBullets: 'summaryBullets',
   userId: 'userId'
 };
 
@@ -204,15 +205,15 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive'
 };
 
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
 exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
-};
-
-exports.Prisma.NullsOrder = {
-  first: 'first',
-  last: 'last'
 };
 exports.RefType = exports.$Enums.RefType = {
   STAGE: 'STAGE',

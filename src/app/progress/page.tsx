@@ -1,25 +1,29 @@
 import { createSupabaseServerClient } from '@/lib/supabase';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { PrismaClient, Goal } from "@/generated/prisma";
-import { MotifData } from "@/types"; // Re-use MotifData type for tag cloud
+import /* PrismaClient, Goal */ "@/generated/prisma"; // Goal & PrismaClient removed
+import /* MotifData */ "@/types"; // MotifData removed
 import ProgressClient from "./ProgressClient"; // Placeholder for client component
 
 export default async function ProgressPage() {
-    // --- Auth Check ---
-    const cookieStore = await cookies();
-    const supabase = createSupabaseServerClient(cookieStore);
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+  // --- Auth Check ---
+  const cookieStore = await cookies();
+  const supabase = createSupabaseServerClient(cookieStore);
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
 
-    if (authError || !user) {
-        redirect('/login');
-    }
-    const userId = user.id;
-    
-    const prisma = new PrismaClient();
+  if (authError || !user) {
+    redirect("/login");
+  }
+  // const userId = user.id; // Commented out - not used
 
-    // --- Fetch Data ---
+  // const prisma = new PrismaClient(); // Comment out if not used elsewhere (or keep if needed)
 
+  // --- Fetch Data ---
+  // Commented out as props are removed from ProgressClient
+  /*
     // Fetch Current Profile (for potential future timeline use)
     const currentProfile = await prisma.spiralProfile.findUnique({
         where: { userId: userId },
@@ -58,13 +62,14 @@ export default async function ProgressPage() {
             .slice(0, count);
     }
     const topTagsForCloud: MotifData[] = getTopMotifs(allDreamsForTags, 30); // Get more tags for cloud
+    */
 
-    // --- Pass data to Client Component ---
-    return (
-        <ProgressClient 
-            initialProfile={currentProfile} 
-            initialGoals={userGoals} 
-            initialTags={topTagsForCloud}
-        />
-    );
+  // --- Pass data to Client Component ---
+  return (
+    <ProgressClient
+    // initialProfile={currentProfile} // Removed prop
+    // initialGoals={userGoals} // Removed prop
+    // initialTags={topTagsForCloud} // Removed prop
+    />
+  );
 } 

@@ -26,7 +26,7 @@ export async function POST(request: Request) {
         // --- Fetch Data for System Prompt --- 
         const profilePromise = prisma.spiralProfile.findUnique({ where: { userId } });
         const goalsPromise = prisma.goal.findMany({ where: { userId, completed: false }, orderBy: { createdAt: 'desc' }, take: 3 });
-        const dreamsPromise = prisma.dream.findMany({ where: { userId }, orderBy: { createdAt: 'desc' }, take: 5, select: { description: true } });
+        const dreamsPromise = prisma.dream.findMany({ where: { userId }, orderBy: { createdAt: 'desc' }, take: 5, select: { summaryBullets: true, description: true } });
 
         const [profile, goals, dreams] = await Promise.all([profilePromise, goalsPromise, dreamsPromise]);
 
@@ -35,18 +35,64 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Profile not found. Cannot initialize coach.' }, { status: 404 });
         }
 
-        // --- Construct System Prompt --- 
-        let systemPrompt = `You are SpiralCoach, an AI assistant helping a user understand their personal growth through the lens of Spiral Dynamics. Maintain a supportive, insightful, and slightly guiding tone.\n\nUser Profile (Spiral Dynamics Blend):\n${JSON.stringify(profile.stageBlend || '{}')}\nDominant Bias (if any): ${profile.dominantBias || 'N/A'}\n`;
+        // --- Construct System Prompt v2 using template replacements ---
+        const TEMPLATE = `You are Spiral Coach, a growth companion specializing in personal development through Spiral Dynamics principles. Your approach is warm, conversational, and focused on helping users understand their worldview patterns, identify growth opportunities, and take meaningful action toward their goals.
 
-        if (goals.length > 0) {
-            systemPrompt += `\nUser's Active Goals:\n${goals.map(g => `- ${g.title} (Plan: ${JSON.stringify(g.plan)})`).join('\n')}\n`;
-        }
-        if (dreams.length > 0) {
-            systemPrompt += `\nUser's Recent Dreams:\n${dreams.map(d => `- ${d.description}`).join('\n')}\n`;
-        }
-        // Add final instruction for the AI's role/output
-        systemPrompt += `\nEngage with the user's latest message based on this context.`;
-        
+### Core Capabilities
+- Analyze communication through a Spiral Dynamics lens
+- Identify patterns across interactions that reveal deeper values and biases
+- Connect dreams and daily experiences to underlying psychological themes
+- Suggest personalized micro-experiments that gently stretch comfort zones
+
+### User Context
+**Stage blend:** {{STAGE_BLEND_JSON}}
+**Primary tendencies:** {{DOMINANT_BIAS_OR_NONE}}
+**Current goal focus:** {{GOAL_TITLE_OR_NONE}}
+**Growth challenges:** {{SABOTAGE_LIST_OR_NONE}}
+**Recent dreams:** {{DREAM_BULLET_SNIPPETS}}
+
+### Response Approach
+Begin with genuine acknowledgment of what you hear beyond just paraphrasing. Connect emotionally while maintaining healthy boundaries. Structure your response to include:
+
+1. **Connection** - Acknowledge both content and emotional subtext of the message. What's being said and what might be underneath?
+
+2. **Insight** - Offer one meaningful observation through a Spiral Dynamics lens. Which value systems are at play? Why might that be significant? Keep theoretical explanations minimal and focused on practical insight.
+
+3. **Activation** - Suggest a single, specific, doable action that creates momentum (under 15 minutes). Frame it as an experiment rather than an assignment.
+
+4. **Integration** (when relevant) - If dreams or symbols emerge, briefly connect them to the larger patterns in a way that feels illuminating rather than interpretive.
+
+Adjust your tone based on the user's current state - more grounding when anxious, more energizing when stuck, more validating when vulnerable. Aim for the voice of a trusted mentor who balances challenge with support.
+
+### Ethical Boundaries
+- Focus on growth exploration, not clinical treatment
+- Invite experimentation without imposing prescriptions
+- Respect the user's pace and readiness
+- Always prioritize safety and well-being
+- Redirect crisis situations to appropriate professional resources
+
+Your ultimate goal is to help users develop greater self-awareness, increase their capacity for complexity, and take meaningful action aligned with their evolving values.
+`;
+        // Prepare dynamic values
+        const stageBlendJson = JSON.stringify(profile.stageBlend || {});
+        const dominantBias = profile.dominantBias || 'None';
+        const activeGoal = goals[0]?.title || 'None';
+        const sabotageList = ([] as string[]).join(', ') || 'None'; // populate as needed
+        const dreamSnippets = dreams
+          .map((d) =>
+            d.summaryBullets
+              ? d.summaryBullets
+              : d.description.split('\n').map((line) => `• ${line}`).join('\n')
+          )
+          .join('\n');
+        // Assemble final prompt
+        const systemPrompt = TEMPLATE
+          .replace('{{STAGE_BLEND_JSON}}', stageBlendJson)
+          .replace('{{DOMINANT_BIAS_OR_NONE}}', dominantBias)
+          .replace('{{GOAL_TITLE_OR_NONE}}', activeGoal)
+          .replace('{{SABOTAGE_LIST_OR_NONE}}', sabotageList)
+          .replace('{{DREAM_BULLET_SNIPPETS}}', dreamSnippets);
+
         console.log(`Coach System Prompt for ${userId}:`, systemPrompt);
 
         // --- Call Vercel AI SDK streamText --- 

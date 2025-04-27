@@ -208,9 +208,16 @@ export default function DreamInputForm() {
     // Default Step 1 view
     return (
       <div className="flex items-center justify-end space-x-1 mb-4 text-xs text-muted-foreground">
-        <span className={cn("font-medium", step === 1 ? "text-purple-600 dark:text-purple-400" : "")}>1 Write Dream</span>
+        <span
+          className={cn(
+            "font-medium",
+            step === 1 ? "text-purple-600 dark:text-purple-400" : ""
+          )}
+        >
+          1 Write Dream
+        </span>
         <span className="mx-1">→</span>
-        <span className={cn("font-medium", step === 2 ? "text-purple-600 dark:text-purple-400" : "")}>2 View Analysis</span>
+        <span className="font-medium">2 View Analysis</span>
       </div>
     );
   };

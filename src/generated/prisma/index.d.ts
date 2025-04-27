@@ -1458,6 +1458,7 @@ export namespace Prisma {
     updatedAt: Date | null
     description: string | null
     mood: number | null
+    summaryBullets: string | null
     userId: string | null
   }
 
@@ -1467,6 +1468,7 @@ export namespace Prisma {
     updatedAt: Date | null
     description: string | null
     mood: number | null
+    summaryBullets: string | null
     userId: string | null
   }
 
@@ -1477,6 +1479,7 @@ export namespace Prisma {
     description: number
     mood: number
     tags: number
+    summaryBullets: number
     userId: number
     _all: number
   }
@@ -1496,6 +1499,7 @@ export namespace Prisma {
     updatedAt?: true
     description?: true
     mood?: true
+    summaryBullets?: true
     userId?: true
   }
 
@@ -1505,6 +1509,7 @@ export namespace Prisma {
     updatedAt?: true
     description?: true
     mood?: true
+    summaryBullets?: true
     userId?: true
   }
 
@@ -1515,6 +1520,7 @@ export namespace Prisma {
     description?: true
     mood?: true
     tags?: true
+    summaryBullets?: true
     userId?: true
     _all?: true
   }
@@ -1612,6 +1618,7 @@ export namespace Prisma {
     description: string
     mood: number
     tags: string[]
+    summaryBullets: string | null
     userId: string
     _count: DreamCountAggregateOutputType | null
     _avg: DreamAvgAggregateOutputType | null
@@ -1641,6 +1648,7 @@ export namespace Prisma {
     description?: boolean
     mood?: boolean
     tags?: boolean
+    summaryBullets?: boolean
     userId?: boolean
     analysis?: boolean | Dream$analysisArgs<ExtArgs>
   }, ExtArgs["result"]["dream"]>
@@ -1652,6 +1660,7 @@ export namespace Prisma {
     description?: boolean
     mood?: boolean
     tags?: boolean
+    summaryBullets?: boolean
     userId?: boolean
   }, ExtArgs["result"]["dream"]>
 
@@ -1662,6 +1671,7 @@ export namespace Prisma {
     description?: boolean
     mood?: boolean
     tags?: boolean
+    summaryBullets?: boolean
     userId?: boolean
   }, ExtArgs["result"]["dream"]>
 
@@ -1672,10 +1682,11 @@ export namespace Prisma {
     description?: boolean
     mood?: boolean
     tags?: boolean
+    summaryBullets?: boolean
     userId?: boolean
   }
 
-  export type DreamOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "description" | "mood" | "tags" | "userId", ExtArgs["result"]["dream"]>
+  export type DreamOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "description" | "mood" | "tags" | "summaryBullets" | "userId", ExtArgs["result"]["dream"]>
   export type DreamInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     analysis?: boolean | Dream$analysisArgs<ExtArgs>
   }
@@ -1694,6 +1705,7 @@ export namespace Prisma {
       description: string
       mood: number
       tags: string[]
+      summaryBullets: string | null
       userId: string
     }, ExtArgs["result"]["dream"]>
     composites: {}
@@ -2125,6 +2137,7 @@ export namespace Prisma {
     readonly description: FieldRef<"Dream", 'String'>
     readonly mood: FieldRef<"Dream", 'Int'>
     readonly tags: FieldRef<"Dream", 'String[]'>
+    readonly summaryBullets: FieldRef<"Dream", 'String'>
     readonly userId: FieldRef<"Dream", 'String'>
   }
     
@@ -8753,6 +8766,7 @@ export namespace Prisma {
     description: 'description',
     mood: 'mood',
     tags: 'tags',
+    summaryBullets: 'summaryBullets',
     userId: 'userId'
   };
 
@@ -8866,6 +8880,14 @@ export namespace Prisma {
   export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
+  export const NullsOrder: {
+    first: 'first',
+    last: 'last'
+  };
+
+  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
   export const JsonNullValueFilter: {
     DbNull: typeof DbNull,
     JsonNull: typeof JsonNull,
@@ -8873,14 +8895,6 @@ export namespace Prisma {
   };
 
   export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
-
-
-  export const NullsOrder: {
-    first: 'first',
-    last: 'last'
-  };
-
-  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
   /**
@@ -8992,6 +9006,7 @@ export namespace Prisma {
     description?: StringFilter<"Dream"> | string
     mood?: IntFilter<"Dream"> | number
     tags?: StringNullableListFilter<"Dream">
+    summaryBullets?: StringNullableFilter<"Dream"> | string | null
     userId?: StringFilter<"Dream"> | string
     analysis?: XOR<AnalysisNullableScalarRelationFilter, AnalysisWhereInput> | null
   }
@@ -9003,6 +9018,7 @@ export namespace Prisma {
     description?: SortOrder
     mood?: SortOrder
     tags?: SortOrder
+    summaryBullets?: SortOrderInput | SortOrder
     userId?: SortOrder
     analysis?: AnalysisOrderByWithRelationInput
   }
@@ -9017,6 +9033,7 @@ export namespace Prisma {
     description?: StringFilter<"Dream"> | string
     mood?: IntFilter<"Dream"> | number
     tags?: StringNullableListFilter<"Dream">
+    summaryBullets?: StringNullableFilter<"Dream"> | string | null
     userId?: StringFilter<"Dream"> | string
     analysis?: XOR<AnalysisNullableScalarRelationFilter, AnalysisWhereInput> | null
   }, "id">
@@ -9028,6 +9045,7 @@ export namespace Prisma {
     description?: SortOrder
     mood?: SortOrder
     tags?: SortOrder
+    summaryBullets?: SortOrderInput | SortOrder
     userId?: SortOrder
     _count?: DreamCountOrderByAggregateInput
     _avg?: DreamAvgOrderByAggregateInput
@@ -9046,6 +9064,7 @@ export namespace Prisma {
     description?: StringWithAggregatesFilter<"Dream"> | string
     mood?: IntWithAggregatesFilter<"Dream"> | number
     tags?: StringNullableListFilter<"Dream">
+    summaryBullets?: StringNullableWithAggregatesFilter<"Dream"> | string | null
     userId?: StringWithAggregatesFilter<"Dream"> | string
   }
 
@@ -9423,6 +9442,7 @@ export namespace Prisma {
     description: string
     mood: number
     tags?: DreamCreatetagsInput | string[]
+    summaryBullets?: string | null
     userId: string
     analysis?: AnalysisCreateNestedOneWithoutDreamInput
   }
@@ -9434,6 +9454,7 @@ export namespace Prisma {
     description: string
     mood: number
     tags?: DreamCreatetagsInput | string[]
+    summaryBullets?: string | null
     userId: string
     analysis?: AnalysisUncheckedCreateNestedOneWithoutDreamInput
   }
@@ -9445,6 +9466,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     mood?: IntFieldUpdateOperationsInput | number
     tags?: DreamUpdatetagsInput | string[]
+    summaryBullets?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
     analysis?: AnalysisUpdateOneWithoutDreamNestedInput
   }
@@ -9456,6 +9478,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     mood?: IntFieldUpdateOperationsInput | number
     tags?: DreamUpdatetagsInput | string[]
+    summaryBullets?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
     analysis?: AnalysisUncheckedUpdateOneWithoutDreamNestedInput
   }
@@ -9467,6 +9490,7 @@ export namespace Prisma {
     description: string
     mood: number
     tags?: DreamCreatetagsInput | string[]
+    summaryBullets?: string | null
     userId: string
   }
 
@@ -9477,6 +9501,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     mood?: IntFieldUpdateOperationsInput | number
     tags?: DreamUpdatetagsInput | string[]
+    summaryBullets?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
   }
 
@@ -9487,6 +9512,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     mood?: IntFieldUpdateOperationsInput | number
     tags?: DreamUpdatetagsInput | string[]
+    summaryBullets?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
   }
 
@@ -9940,9 +9966,29 @@ export namespace Prisma {
     isEmpty?: boolean
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type AnalysisNullableScalarRelationFilter = {
     is?: AnalysisWhereInput | null
     isNot?: AnalysisWhereInput | null
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
   }
 
   export type DreamCountOrderByAggregateInput = {
@@ -9952,6 +9998,7 @@ export namespace Prisma {
     description?: SortOrder
     mood?: SortOrder
     tags?: SortOrder
+    summaryBullets?: SortOrder
     userId?: SortOrder
   }
 
@@ -9965,6 +10012,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     description?: SortOrder
     mood?: SortOrder
+    summaryBullets?: SortOrder
     userId?: SortOrder
   }
 
@@ -9974,6 +10022,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     description?: SortOrder
     mood?: SortOrder
+    summaryBullets?: SortOrder
     userId?: SortOrder
   }
 
@@ -10029,6 +10078,24 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
   export type DreamScalarRelationFilter = {
     is?: DreamWhereInput
     isNot?: DreamWhereInput
@@ -10081,29 +10148,9 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
   export type BoolNullableFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
     not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type SpiralProfileCountOrderByAggregateInput = {
@@ -10156,24 +10203,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedJsonNullableFilter<$PrismaModel>
     _max?: NestedJsonNullableFilter<$PrismaModel>
-  }
-
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -10476,6 +10505,10 @@ export namespace Prisma {
     push?: string | string[]
   }
 
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
   export type AnalysisUpdateOneWithoutDreamNestedInput = {
     create?: XOR<AnalysisCreateWithoutDreamInput, AnalysisUncheckedCreateWithoutDreamInput>
     connectOrCreate?: AnalysisCreateOrConnectWithoutDreamInput
@@ -10508,10 +10541,6 @@ export namespace Prisma {
     upsert?: DreamUpsertWithoutAnalysisInput
     connect?: DreamWhereUniqueInput
     update?: XOR<XOR<DreamUpdateToOneWithWhereWithoutAnalysisInput, DreamUpdateWithoutAnalysisInput>, DreamUncheckedUpdateWithoutAnalysisInput>
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
   }
 
   export type NullableBoolFieldUpdateOperationsInput = {
@@ -10574,6 +10603,20 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -10632,7 +10675,7 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
+  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -10643,12 +10686,10 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type NestedBoolNullableFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
-    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type NestedIntNullableFilter<$PrismaModel = never> = {
@@ -10660,6 +10701,11 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedBoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
   }
   export type NestedJsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -10683,23 +10729,6 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
-
-  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -10866,6 +10895,7 @@ export namespace Prisma {
     description: string
     mood: number
     tags?: DreamCreatetagsInput | string[]
+    summaryBullets?: string | null
     userId: string
   }
 
@@ -10876,6 +10906,7 @@ export namespace Prisma {
     description: string
     mood: number
     tags?: DreamCreatetagsInput | string[]
+    summaryBullets?: string | null
     userId: string
   }
 
@@ -10902,6 +10933,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     mood?: IntFieldUpdateOperationsInput | number
     tags?: DreamUpdatetagsInput | string[]
+    summaryBullets?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
   }
 
@@ -10912,6 +10944,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     mood?: IntFieldUpdateOperationsInput | number
     tags?: DreamUpdatetagsInput | string[]
+    summaryBullets?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
   }
 

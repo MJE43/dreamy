@@ -22,6 +22,7 @@ model Dream {
   description String
   mood        Int       // Add mood (e.g., 1-5)
   tags        String[]  // ⬅︎ switched from delimited string → Postgres text[]
+  summaryBullets String?  // New: newline-separated markdown bullets summarizing the dream
   userId      String    // This will store the Supabase Auth user UUID
   analysis    Analysis? // A dream can have zero or one analysis
 

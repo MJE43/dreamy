@@ -7,7 +7,7 @@ import { cookies } from 'next/headers';
 import { google } from '@ai-sdk/google';
 import { generateObject } from 'ai';
 // Schema import (assuming path is correct)
-import { dreamAnalysisSchema } from '@/lib/schemas/dreamAnalysis';
+import { structuredDreamAnalysisZodSchema } from '@/lib/schemas/dreamAnalysis';
 // Removed unused GoogleGenerativeAI import
 
 const prisma = new PrismaClient();
@@ -78,7 +78,7 @@ export async function POST(request: Request) {
     // --- Call Vercel AI SDK generateObject --- 
     const { object: analysisJson } = await generateObject({
         model: google('gemini-2.0-flash'), // Use consistent model
-        schema: dreamAnalysisSchema, // Provide the Zod schema
+        schema: structuredDreamAnalysisZodSchema, // Provide the Zod schema
         prompt: prompt,
     });
     // If generateObject fails (validation or API error), it throws, caught below.

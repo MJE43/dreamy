@@ -4,7 +4,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { DilemmaForQuiz, DilemmaChoice } from '@/app/(auth)/onboarding/step-2/actions';
+import { DilemmaForQuiz } from "@/app/(auth)/onboarding/step-2/actions";
 
 interface DilemmaCardProps {
   dilemma: DilemmaForQuiz;
@@ -15,7 +15,7 @@ interface DilemmaCardProps {
 }
 
 const DilemmaCard: React.FC<DilemmaCardProps> = ({ dilemma, value, onChange }) => {
-  const choices = dilemma.details?.choices as DilemmaChoice[] | undefined; // Add type assertion for safety
+  const choices = dilemma.details?.choices;
 
   if (!choices || choices.length !== 2) {
     // Optional: Handle cases where choices are missing or not exactly two
