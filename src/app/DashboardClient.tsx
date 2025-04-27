@@ -12,7 +12,7 @@ import { Prisma } from "@/generated/prisma"; // Import Prisma namespace only
 // import { Prisma, type Goal } from "@/generated/prisma"; // Import Prisma namespace and Goal type
 // Removed unused Dialog imports
 // import GoalCreatorModal from '@/components/GoalCreatorModal';
-import CoachChat from "@/components/CoachChat";
+import CoachPreviewCard from "@/components/CoachPreviewCard";
 import RecentDreamsList from '@/components/dreams/RecentDreamsList'; // Corrected import path
 import SpiralPassport from '@/components/SpiralPassport'; // Ensure correct import path
 
@@ -113,14 +113,9 @@ export default function DashboardClient({
 
         {/* Column 2: Coach & Recent Dreams */}
         <div className="lg:col-span-1 space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Coach</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <CoachChat />
-            </CardContent>
-          </Card>
+          {/* Dashboard chat preview card */}
+          <CoachPreviewCard />
+          {/* Recent Dreams List */}
           <RecentDreamsList dreams={initialDreams} />
         </div>
 

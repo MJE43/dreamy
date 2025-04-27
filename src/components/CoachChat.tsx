@@ -9,7 +9,11 @@ import { useChat } from '@ai-sdk/react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-const CoachChat: React.FC = () => {
+interface CoachChatProps {
+  initialMessage?: string;
+}
+
+const CoachChat: React.FC<CoachChatProps> = ({ initialMessage = '' }) => {
   const {
     messages, 
     input, 
@@ -27,10 +31,12 @@ const CoachChat: React.FC = () => {
               role: 'assistant',
               content: 'How can I support your journey today?'
           }
-      ]
+      ],
+      initialInput: initialMessage
     });
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const scrollToBottom = useCallback(() => {
     if (scrollAreaRef.current) {
@@ -44,6 +50,12 @@ const CoachChat: React.FC = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages, scrollToBottom]);
+
+  useEffect(() => {
+    if (initialMessage && textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, [initialMessage]);
 
   return (
     <div className="flex flex-col h-[400px]">
@@ -97,6 +109,7 @@ const CoachChat: React.FC = () => {
        )}
       <form onSubmit={handleSubmit} className="p-2 border-t flex items-start gap-2">
         <Textarea
+          ref={textareaRef}
           value={input}
           onChange={handleInputChange}
           placeholder="Type your message..."
