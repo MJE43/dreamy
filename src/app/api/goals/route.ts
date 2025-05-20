@@ -1,17 +1,23 @@
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@/generated/prisma';
+import { PrismaClient } from '@prisma/client'; // Corrected import
 import { z } from 'zod';
-// import { GoogleGenerativeAI } from "@google/generative-ai";
+import { google } from '@ai-sdk/google'; // Vercel AI SDK for Google
+import { generateObject } from 'ai'; // Vercel AI SDK core
 
 const prisma = new PrismaClient();
-// const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+// const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || ''); // Old SDK
 
 // Input validation schema
 const createGoalSchema = z.object({
     title: z.string().min(3, "Goal title must be at least 3 characters"),
     targetDate: z.string().optional(), // Expecting ISO string date for simplicity
+});
+
+// Schema for AI-generated milestones
+const milestonesSchema = z.object({
+    milestones: z.array(z.string()).min(3).max(5),
 });
 
 export async function POST(request: Request) {
@@ -33,33 +39,52 @@ export async function POST(request: Request) {
         }
         const { title, targetDate } = validation.data;
 
-        // --- Call AI to generate milestones ---
-        // TODO: Construct prompt for Gemini
-        const milestonePrompt = `Based on the user goal "${title}", break it down into 3-5 actionable milestones. Respond ONLY with a valid JSON array of strings representing the milestones. Example: ["Milestone 1 description", "Milestone 2 description"]`;
-        
-        console.log("Goal Milestone Prompt:", milestonePrompt);
-        
-        // TODO: Call Gemini API
-        // const model = genAI.getGenerativeModel({ model: "gemini-pro" }); 
-        // const result = await model.generateContent(milestonePrompt);
-        // const response = await result.response;
-        // const text = response.text().replace(/^```json\n|\n```$/g, '').trim();
-        // let milestones = JSON.parse(text); // Expecting JSON array
-        
-        // Placeholder milestones
-        let milestones = [
-            `Define what \"${title}\" means specifically.`, 
-            `Identify first step for \"${title}\".`, 
-            `Schedule time to work on \"${title}\".`
+        let milestones: string[];
+
+        const fallbackMilestones = [
+            `Define what "${title}" means specifically.`,
+            `Identify first step for "${title}".`,
+            `Schedule time to work on "${title}".`
         ];
 
-        // TODO: Validate milestones format (should be array of strings)
-        if (!Array.isArray(milestones) || !milestones.every(m => typeof m === 'string')) {
-            console.error("Gemini did not return a valid milestone array:", milestones);
-            milestones = ["Define goal clearly", "Take first step", "Review progress"]; // Fallback
-            // Or throw an error?
-            // return NextResponse.json({ error: 'Failed to generate goal milestones' }, { status: 500 });
+        if (!process.env.GEMINI_API_KEY) {
+            console.warn("GEMINI_API_KEY is not set. Falling back to placeholder milestones.");
+            milestones = fallbackMilestones;
+        } else {
+            try {
+                const milestonePrompt = `Given the goal "${title}", generate 3-5 actionable milestones. Respond ONLY with a valid JSON object containing a key "milestones" which is an array of strings. Each string should be a concise milestone description. Example: {"milestones": ["Define project scope", "Develop core features", "Test and deploy"]}`;
+                console.log("Goal Milestone Prompt:", milestonePrompt);
+
+                const { object } = await generateObject({
+                    model: google('models/gemini-pro'), // Specify the model
+                    schema: milestonesSchema, // Define the expected Zod schema for the output
+                    prompt: milestonePrompt,
+                });
+
+                if (object && object.milestones) {
+                    milestones = object.milestones;
+                } else {
+                    console.error("AI milestone generation failed or returned unexpected format, using fallback.");
+                    milestones = fallbackMilestones;
+                }
+
+            } catch (aiError) {
+                console.error("Error calling AI for milestones:", aiError);
+                milestones = fallbackMilestones;
+            }
         }
+
+        // Final validation, just in case, though generateObject with Zod schema should ensure this
+        if (!Array.isArray(milestones) || !milestones.every(m => typeof m === 'string') || milestones.length === 0) {
+            console.error("Milestones are not in the expected format after AI call or fallback, using default fallback.");
+            milestones = fallbackMilestones; // Ensure there's always a valid array
+        }
+
+        // Transform milestones to the new structure: Array<{ text: string; completed: boolean; }>
+        const structuredPlan = milestones.map(milestoneText => ({
+            text: milestoneText,
+            completed: false,
+        }));
         
         // --- Save Goal to Database ---
         const newGoal = await prisma.goal.create({
@@ -67,8 +92,9 @@ export async function POST(request: Request) {
                 userId: userId,
                 title: title,
                 targetDate: targetDate ? new Date(targetDate) : null,
-                plan: milestones, // Prisma expects Json, array should be fine
-                // progressLog and completed have defaults
+                plan: structuredPlan, // Save in the new object format
+                progress: 0, // Explicitly set initial progress
+                // completed has default false, progressLog has default []
             }
         });
 
@@ -85,4 +111,43 @@ export async function POST(request: Request) {
     }
 }
 
-// TODO: Add GET handler? To fetch goals for display? 
+export async function GET(request: Request) {
+    try {
+        const supabase = createRouteHandlerClient({ cookies });
+        const { data: { session }, error: authError } = await supabase.auth.getSession();
+
+        if (authError || !session?.user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+        const userId = session.user.id;
+
+        const goals = await prisma.goal.findMany({
+            where: {
+                userId: userId,
+            },
+            orderBy: {
+                createdAt: 'desc', // Or 'targetDate', 'updatedAt' depending on desired default sort
+            },
+            select: {
+                id: true,
+                title: true,
+                targetDate: true,
+                plan: true, // For milestone preview
+                completed: true,
+                progress: true, // The new field for progress percentage
+                createdAt: true,
+                updatedAt: true,
+            }
+        });
+
+        return NextResponse.json(goals, { status: 200 });
+
+    } catch (error: unknown) {
+        let errorMessage = 'Internal Server Error';
+        if (error instanceof Error) {
+            errorMessage = error.message;
+        }
+        console.error("Error in GET /api/goals:", error);
+        return NextResponse.json({ error: errorMessage }, { status: 500 });
+    }
+}

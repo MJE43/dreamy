@@ -12,7 +12,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  // directUrl = env("DIRECT_URL") // Temporarily commented out to resolve db push issue
 }
 
 model Dream {
@@ -60,6 +60,7 @@ model Goal {
   title       String
   targetDate  DateTime?
   plan        Json                       // milestones array
+  progress    Int      @default(0)       // Overall progress percentage
   progressLog Json?                      // [{date:"…",percent:30}, …]
   completed   Boolean  @default(false)
 
